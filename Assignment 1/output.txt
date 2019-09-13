@@ -1,0 +1,10 @@
+Maria,Garcia,Mariag@usc.edu,18,true,201 classmate, tennis club
+David,Hernandez,Davidh@usc.edu,19,false,Carpool, 201 classmate
+James,Johnson,Jamesj@usc.edu,21,true,Cousin, Best Friend
+Elizabeth,Miller,EMiller@usc.edu,18,false,201 classmate
+Mary,Rodriguez,Maryr@usc.edu,22,true,Car seller, Catherine's cousin, 104 classmate
+James,Smith,jamess@usc.edu,19,false,201 classmate, subleasing appartemnt, couch seller, TV seller, bike lender
+Sam,Smith,Sams@usc.edu,21,true,104 classmate
+Tiffany,Smith,Tiffanys@usc.edu,22,false,Lend textbooks, Wilson's friend
+Jane,Taylor,Taylor@usc.edu,19,true,201 classmate, 104 classmate
+Martha,Wilson,Wilson@usc.edu,18,true,201 classmate
