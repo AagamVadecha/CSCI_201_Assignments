@@ -38,8 +38,8 @@ public class Assignment1 {
                     try {
                         toAdd = parseLine(scannerFile.nextLine());
                     } catch (Exception e) {
-                        System.out.println("This file " + fileName + " is not formatted properly. \n");
-                        System.out.println(e.getMessage());
+                        System.out.println("This file " + fileName + " is not formatted properly.");
+                        System.out.println(e.getMessage() + "\n");
                         properFile = false;
                         break;
                     }
@@ -55,27 +55,58 @@ public class Assignment1 {
         boolean inLine = true;
         do{
             printMenu();
-            String command = scanner.nextLine();
+            String command = scanner.nextLine().trim();
             int commandNum;
             try{
                 commandNum = Integer.parseInt(command);
                 switch(commandNum){
                     case 1:
-                        System.out.println("Enter the contact's last name.");
-                        boolean notFoundPerson = false;
+
+                        boolean foundPerson = false;
+                        do {
                             try {
-                                findPerson(scanner.nextLine(),people);
-                            }
-                            catch(Exception e) {
+                                System.out.println("Enter the contact's last name.");
+                                findPerson(scanner.nextLine(), people);
+                                foundPerson = true;
+                            } catch (Exception e) {
                                 System.out.println(e.getMessage());
+                                foundPerson = false;
                             }
+                        }while(!foundPerson);
                         break;
                     case 2:
-                        System.out.println("What is the first name of your new contact");
-                        String fname = scanner.nextLine();
-                        System.out.println("What is the last name of your new contact?");
-                        String lname = scanner.nextLine();
                         boolean valid = true;
+                        String fname = null;
+                        do{
+                            System.out.println("What is the first name of your new contact");
+                            fname = scanner.nextLine();
+                            fname = fname.trim();
+                            if(!fname.matches("^[a-zA-Z]*$") || fname.isEmpty())
+                            {
+                                System.out.println("The first name must be alphabetic and have no non-alphabetic characters. Please try again.");
+                                valid = false;
+                            }
+                            else
+                                valid = true;
+                        }while(!valid);
+                        fname = fname.substring(0, 1).toUpperCase() + fname.substring(1).toLowerCase();
+
+
+                        String lname = null;
+                        do{
+                            System.out.println("What is the last name of your new contact?");
+                            lname = scanner.nextLine();
+                            lname = lname.trim();
+                            if(!lname.matches("^[a-zA-Z]*$") || lname.isEmpty())
+                            {
+                                System.out.println("The last name must be alphabetic and have no non-alphabetic characters. Please try again.");
+                                valid = false;
+                            }
+                            else
+                                valid = true;
+                        }while(!valid);
+                        lname = lname.substring(0, 1).toUpperCase() + lname.substring(1).toLowerCase();
+
                         String email = null;
                         boolean nearCampus = false;
                         int age = -1;
@@ -140,13 +171,17 @@ public class Assignment1 {
                         System.out.println(fname + " " + lname + " has been added to your contact list.");
                         break;
                     case 3:
-                        System.out.println("Please give me the email of the person you want to delete.");
-                        try{
-                            deletePerson(scanner.nextLine(), people);
-                        }
-                        catch(Exception e){
-                            System.out.println(e.getMessage());
-                        }
+                        boolean foundEmail = false;
+                        do {
+                            System.out.println("Please give me the email of the person you want to delete.");
+                            try {
+                                people = deletePerson(scanner.nextLine(), people);
+                                foundEmail = true;
+                            } catch (Exception e) {
+                                System.out.println(e.getMessage());
+                                foundEmail = false;
+                            }
+                        }while(!foundEmail);
                         break;
                     case 4:
                         System.out.println("Please give me the name of the file you want to write to.");
@@ -176,8 +211,7 @@ public class Assignment1 {
         String[] values = line.split(",");
         if(values.length < 6)
         {
-            System.out.println("There are not enough parameters on line: \n'" + line + "'.");
-            throw new Exception();
+            throw new Exception("There are not enough parameters on line: \n'" + line + "'.");
         }
         else
         {
@@ -185,6 +219,12 @@ public class Assignment1 {
                 values[x] = values[x].trim();
             String _fname = values[0];
             String _lname = values[1];
+            if(!_fname.matches("^[a-zA-Z]*$") || Character.isWhitespace(_fname.charAt(0)))
+                throw new Exception("The parameter " + values[0] + " cannot be parsed as a first name");
+            if(!_lname.matches("^[a-zA-Z]*$") || Character.isWhitespace(_lname.charAt(0)))
+                throw new Exception("The parameter " + values[1] + " cannot be parsed as a last name");
+            _fname = _fname.substring(0, 1).toUpperCase() + _fname.substring(1).toLowerCase();
+            _lname = _lname.substring(0, 1).toUpperCase() + _lname.substring(1).toLowerCase();
             String _email;
             int _age;
             boolean _isNearCampus;
@@ -263,13 +303,14 @@ public class Assignment1 {
             }
         }
         if(!foundSomeone)
-            throw new Exception("There is no one with the last name " + person + " in your contact book.");
+            throw new Exception("There is no one with the last name " + person + " in your contact book. Please try again.");
     }
 
     public static ArrayList<Person> deletePerson(String email, ArrayList<Person> people) throws Exception{
         boolean deletedPerson = false;
         for(int x=0; x<people.size(); x++) {
-            if (people.get(x).get_email().equals(email)) {
+            if (people.get(x).get_email().equalsIgnoreCase(email)) {
+                System.out.println(people.get(x).get_fname() + " " + people.get(x).get_lname() + " has been deleted.");
                 people.remove(x);
                 deletedPerson = true;
             }

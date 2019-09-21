@@ -2,6 +2,7 @@ package assignment1;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("unused")
 public class Person implements Comparable<Person> {
 	private String _fname;
 	private String _lname;
@@ -35,7 +36,7 @@ public class Person implements Comparable<Person> {
 	}
 	
 	public String toStringFile() {
-		StringBuilder y = new StringBuilder(_fname + "," + _lname + "," + _email + "," + _age + "," + Boolean.toString(_nearCampus) + "," + _notes);
+		StringBuilder y = new StringBuilder(_fname + "," + _lname + "," + _email + "," + _age + "," + (Boolean.toString(_nearCampus)).toUpperCase() + "," + _notes);
 		return y.toString();
 	}
 

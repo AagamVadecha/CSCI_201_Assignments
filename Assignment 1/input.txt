@@ -7,4 +7,4 @@ Tiffany,Smith,Tiffanys@usc.edu,22,FALSE,Lend textbooks,Wilson's friend
 James,Smith,jamess@usc.edu,19,FALSE,201 classmate,subleasing appartemnt,couch seller,TV seller,bike lender
 Elizabeth,Miller,EMiller@usc.edu,18,FALSE,201 classmate
 Martha,Wilson,Wilson@usc.edu,18,TRUE,201 classmate
-Jane,Taylor,Taylor@usc.edu,19,TRUE,201 classmate,104 classmate
+Jane,Taylor,Taylor@usc .edu,19,TRUE,201 classmate,104 classmate
