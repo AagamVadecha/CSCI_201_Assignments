@@ -1,0 +1,42 @@
+.page{
+    height:100vh;
+}
+.header{
+    height:10vh;
+}
+
+.bodyBackground {
+    overflow: hidden;
+    background-image: url("background.jpg");
+    height:90vh;
+    opacity: 1;
+    background-size: 100% 100%;
+    position: relative;
+    color: white;
+    flex-direction: column;
+    width: 100vw;
+
+
+
+}
+.Stuff{
+    color: rgba(255,255,255, 0.7);
+    font-size: 4vw;
+}
+
+.star-ratings-sprite {
+    background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+    font-size: 0;
+    height: 21px;
+    line-height: 0;
+    overflow: hidden;
+    text-indent: -999em;
+    width: 110px;
+    margin: 0 auto;
+}
+.star-ratings-sprite-rating {
+         background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x 0 100%;
+         float: left;
+         height: 21px;
+         display:block;
+}

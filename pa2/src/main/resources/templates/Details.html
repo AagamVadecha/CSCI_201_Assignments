@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="body.css">
+</head>
+<body>
+<div class = "header" style="height: 10%;">
+    <a href="HomePage"><img src = "bookworm.png" width = "10%"> </a>
+    <form action = "/SearchResults" method="post">
+        <input type = "text" name="searchInput"/> <br />
+        <input type="radio" name="type" value="name"> Name
+        <input type="radio" name="type" value="ISBN"> ISBN <br>
+        <input type="radio" name="type" value="Author"> Author
+        <input type="radio" name="type" value="Publisher"> Publisher<br>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+<table>
+    <!--/*@thymesVar id="bookValues" type="ArrayList<com.cs201.model.BookValue>"*/-->
+    <tr>
+        <td>
+            <form action = "/SearchResults" method="post">
+                <input type="hidden" name="searchInput" th:value="${searchInput}">
+                <input type="hidden" name="type" th:value="${type}">
+                <input type = "image" th:src="${link}" alt="Submit">
+            </form>
+        </td>
+        <td>
+            <H2>
+                <p th:text="${title}"></p>
+            </H2>
+
+            <p th:text="'Author: ' + ${author}"/>
+            <p th:text="'Publisher: ' + ${publisher}"/>
+            <p th:text="'Published Date: ' + ${publisher}"/>
+            <p th:text="'ISBN: ' + ${isbn}"/>
+            <p th:text="'Summary: ' + ${summary}"/>
+            Rating: <div class="star-ratings-sprite"><span th:style= "'width: '+ ${rating}+'%'" class="star-ratings-sprite-rating">
+            </div>
+        </td>
+    </tr>
+</table>
+
+
+
+
+</body>
+</html>

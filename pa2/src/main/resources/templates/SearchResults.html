@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <link rel="stylesheet" type="text/css" href="body.css">
+</head>
+<body>
+    <div class = "header" style="height: 10%;">
+        <a href="HomePage"><img src = "bookworm.png" width = "10%"> </a>
+        <form action = "/SearchResults" method="post">
+            <input type = "text" name="searchInput" placeholder="What book is on your mind?"/>
+            <input type="radio" name="type" value="name" id="name"> <label for = "name">name</label>
+            <input type="radio" name="type" value="ISBN" id="ISBN"> <label for = "ISBN">ISBN</label><br>
+            <input type="radio" name="type" value="Author" id="Author"> <label for="Author">Author</label>
+            <input type="radio" name="type" value="Publisher" id="Publisher"> <label for="Publisher">Publisher</label>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+    <div>
+        <h2>
+            <p th:text="'Results for: ' +${searchInput}" />
+        </h2>
+        <table>
+            <!--/*@thymesVar id="bookValues" type="ArrayList<com.cs201.model.BookValue>"*/-->
+            <tr th:each="bookValue : ${bookValues}">
+                <td>
+                    <form action = "/Details" method="post">
+                        <input type="hidden" name="searchInput" th:value="${searchInput}">
+                        <input type="hidden" name="type" th:value="${type}">
+                        <input type="hidden" name="link" th:value="${bookValue.getBookLink()}">
+                        <input type="hidden" name="title" th:value="${bookValue.getBookName()}">
+                        <input type="hidden" name="author" th:value="${bookValue.getBookAuthor()}">
+                        <input type="hidden" name="publisher" th:value="${bookValue.getPublisher()}">
+                        <input type="hidden" name="date" th:value="${bookValue.getDate()}">
+                        <input type="hidden" name="isbn" th:value="${bookValue.getIsbn()}">
+                        <input type="hidden" name="summary" th:value="${bookValue.getBookSummary()}">
+                        <input type="hidden" name="rating" th:value="${bookValue.getRating()}">
+                        <input type = "image" th:src="${bookValue.getBookLink()}" alt="Submit">
+                    </form>
+                </td>
+                <td>
+                    <!--/*@thymesVar id="bookValues.book" type="ArrayList<com.cs201.model.BookValue>"*/-->
+                    <p th:text="${bookValue.getBookName()}"/>
+                    <!--/*@thymesVar id="bookAuthor" type="java.lang.String"*/-->
+                    <p th:text="'Author: ' + ${bookValue.getBookAuthor()}"/>
+
+                    <!--/*@thymesVar id="bookSummary" type="java.lang.String"*/-->
+                    <p th:text="'Summary: ' + ${bookValue.getBookSummary()}"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+</html>

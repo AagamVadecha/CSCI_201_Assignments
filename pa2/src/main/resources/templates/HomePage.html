@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Welcome to BookWorm</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="body.css">
+</head>
+<body>
+
+    <div class = "page" >
+        <div class = "header" style="height: 10%;">
+            <a href="HomePage"><img src = "bookworm.png" width = "10%"> </a>
+        </div>
+        <br>
+        <div class = "bodyBackground" style="display:flex;justify-content:center;align-items:center;">
+            <div class = "Stuff">
+                BookWorm: Just a Mini Program... Happy Days! <br>
+            </div>
+            <div class = "Form">
+                <p style="color:red" th:text="${errorString}"/>
+                <form action = "/SearchResults" method="post">
+                    <input type = "text" name="searchInput" placeholder="Search for your favorite book!" style="width: 80vw;height: 3vh;"/> <br />
+                    <input type="radio" name="type" value="name" id="name"> <label for = "name">name</label>
+                    <input type="radio" name="type" value="ISBN" id="ISBN"> <label for = "ISBN">ISBN</label><br>
+                    <input type="radio" name="type" value="Author" id="Author"> <label for="Author">Author</label>
+                    <input type="radio" name="type" value="Publisher" id="Publisher"> <label for="Publisher">Publisher</label>
+                    <input type="submit" style="position: absolute;right: 10vw;" value="Search!">
+                </form>
+            </div>
+        </div>
+    </div>
+<!--        name = "Harry Potter"-->
+</body>
+</html>
+
