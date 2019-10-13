@@ -35,7 +35,7 @@ public class ClientController {
     @PostMapping("/SearchResults")
 //    public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
     public String greeting(@RequestParam(name="searchInput", required=false, defaultValue = "") String searchInput, @RequestParam(name="type", required=false, defaultValue = "") String type, Model model) {
-        if(searchInput.equals("") || type.equals("")){
+        if(searchInput.equals("")){
             String errorString = "You left an input field blank. Please try again.";
             model.addAttribute("errorString", errorString);
             return "HomePage";
@@ -43,18 +43,18 @@ public class ClientController {
         String pref = "";
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
         if(type.equals("name")){
-            pref = "intitle: ";
+            pref = "intitle:";
 
         }
         else if(type.equals("Author")){
-            pref = "inauthor: ";
+            pref = "inauthor:";
 
         }
         else if(type.equals("Publisher")){
-            pref = "inpublisher: ";
+            pref = "inpublisher:";
         }
         else if(type.equals("ISBN")){
-            pref = "isbn: ";
+            pref = "isbn:";
         }
         pref = pref + searchInput.trim();
 
@@ -66,16 +66,12 @@ public class ClientController {
                     .setGoogleClientRequestInitializer(new BooksRequestInitializer("AIzaSyBN2171MOM7i2rEobTiE8ITC_pOv13em88"))
                     .build();
             List volumesList = books.volumes().list(pref);
-
-            // Execute the query.
             Volumes volumes = volumesList.execute();
             if (volumes.getTotalItems() == 0 || volumes.getItems() == null) {
                 errorString = "No books were found. Please try again.";
                 model.addAttribute("errorString", errorString);
                 return "HomePage";
             }
-
-            System.out.println(volumes.getTotalItems());
             for (Volume volume : volumes.getItems()) {
                 Volume.VolumeInfo volumeInfo = volume.getVolumeInfo();
                 String author =(volumeInfo.getAuthors() != null && !volumeInfo.getAuthors().isEmpty()) ? volumeInfo.getAuthors().get(0) : "No Author Found";
@@ -85,20 +81,30 @@ public class ClientController {
                     link = "";
                 }else
                     link = imageLinks.getThumbnail();
-
+                String isbn13 = null;
+                java.util.List<Volume.VolumeInfo.IndustryIdentifiers> isbnNums = volumeInfo.getIndustryIdentifiers();
+                for(Volume.VolumeInfo.IndustryIdentifiers x : isbnNums){
+                    if(x.getType().equalsIgnoreCase("ISBN_13"))
+                        isbn13 = x.getIdentifier();
+                }
+                if(isbn13 == null)
+                    isbn13 = "No ISBN-13 was found";
                 String title = volumeInfo.getTitle();
                 String description = volumeInfo.getDescription();
                 if(description==null)
                     description = "No description found";
                 String pubDate = volumeInfo.getPublishedDate();
                 double rating;
-                if(volumeInfo.getAverageRating() == null)
+                String noRatingFound = "";
+                if(volumeInfo.getAverageRating() == null){
                     rating = 0.0;
+                    noRatingFound="No rating was found";
+                }
                 else
                     rating = volumeInfo.getAverageRating()*20.0;
-                String publisher = volumeInfo.getPublisher();
-                int isbn = type.equals("ISBN") ? Integer.parseInt(searchInput.trim()) : (int) ((Math.random() * 900000000)+100000000);
-                BookValue temp = new BookValue(title, link, author , description, pubDate, isbn , (int)rating, publisher);
+                String publisher = (volumeInfo.getPublisher()==null || volumeInfo.getPublisher().equals("")) ?
+                        "No publisher was found" : volumeInfo.getPublisher();
+                BookValue temp = new BookValue(title,link,author,description,pubDate,isbn13,(int)rating,publisher,noRatingFound);
                 bookValues.add(temp);
             }
         }
@@ -106,14 +112,6 @@ public class ClientController {
             return "HomePage";
 
         }
-//        catch(Exception e){
-//            errorString = "Your query failed. Please try again.";
-//            model.addAttribute("errorString", errorString);
-//            System.out.println("ERROR" + e.getMessage() + e.getStackTrace());
-//            return "HomePage";
-////            model.addAttribute("bookValues", bookValues);
-////            return  "SearchResults";
-//        }
         model.addAttribute("bookValues", bookValues);
         model.addAttribute("searchInput", searchInput);
         model.addAttribute("type", type);
@@ -127,7 +125,7 @@ public class ClientController {
                           @RequestParam(name="date", required=true) String date,
                           @RequestParam(name="isbn", required=true) String isbn,
                           @RequestParam(name="summary", required=true) String summary,
-                          @RequestParam(name="rating", required=true) String rating,
+                          @RequestParam(name="rating", required=true) String rating,@RequestParam(name="noRatingFound",required = true) String noRatingFound,
                           Model model){
         model.addAttribute("searchInput", searchInput);
         model.addAttribute("type", type);
@@ -139,6 +137,7 @@ public class ClientController {
         model.addAttribute("isbn",isbn);
         model.addAttribute("summary",summary);
         model.addAttribute("rating",rating);
+        model.addAttribute("noRatingFound", noRatingFound);
         return "Details.html";
     }
 

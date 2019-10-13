@@ -1,9 +1,8 @@
 package com.cs201.model;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.String;
 
 public class BookValue{
+
     public String getBookName() {
         return bookName;
     }
@@ -24,7 +23,7 @@ public class BookValue{
         return date;
     }
 
-    public int getIsbn() {
+    public String getIsbn() {
         return isbn;
     }
 
@@ -35,33 +34,29 @@ public class BookValue{
     public String getPublisher() {
         return publisher;
     }
+    public String getNoRatingFound(){
+        return noRatingFound;
+    }
 
     String bookName;
     String bookLink;
     String bookAuthor;
     String bookSummary;
     String date;
-    int isbn;
+    String isbn;
     int rating;
     String publisher;
+    String noRatingFound;
 
-    public BookValue(String bookName, String bookLink, String bookAuthors, String bookSummary, String date, int isbn, int rating, String publisher) {
+    public BookValue(String bookName, String bookLink, String bookAuthors, String bookSummary, String date, String isbn13, int rating, String publisher, String noRatingFound) {
         this.bookName = bookName;
         this.bookLink = bookLink;
         this.bookAuthor = bookAuthors;
         this.bookSummary = bookSummary;
         this.date = date;
-        this.isbn = isbn;
+        this.isbn = isbn13;
         this.rating = rating;
         this.publisher = publisher;
-    }
-    public BookValue(String bookName, String bookLink, String bookAuthors, String bookSummary, String date, int rating, String publisher) {
-        this.bookName = bookName;
-        this.bookLink = bookLink;
-        this.bookAuthor = bookAuthors;
-        this.bookSummary = bookSummary;
-        this.date = date;
-        this.rating = rating;
-        this.publisher = publisher;
+        this.noRatingFound = noRatingFound;
     }
 }
