@@ -128,6 +128,7 @@ public class APIController {
                 String description = volumeInfo.getDescription();
                 if(description==null)
                     description = "No description found";
+                description = description.replaceAll("\\<.*?\\>", "");
                 String pubDate = volumeInfo.getPublishedDate();
                 double rating;
                 String noRatingFound = "";
@@ -149,6 +150,7 @@ public class APIController {
         }
         model.addAttribute("bookValues", bookValues);
         model.addAttribute("name", session.getAttribute("username"));
+        model.addAttribute("sessionActive", session.getAttribute("user"));
         return "Profile";
     }
 

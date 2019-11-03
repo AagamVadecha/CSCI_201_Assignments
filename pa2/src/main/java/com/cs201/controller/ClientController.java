@@ -112,8 +112,10 @@ public class ClientController {
                     isbn13 = "No ISBN-13 was found";
                 String title = volumeInfo.getTitle();
                 String description = volumeInfo.getDescription();
+
                 if(description==null)
                     description = "No description found";
+                description = description.replaceAll("\\<.*?\\>", "");
                 String pubDate = volumeInfo.getPublishedDate();
                 double rating;
                 String noRatingFound = "";
