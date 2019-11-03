@@ -10,35 +10,40 @@ import com.google.api.services.books.Books.Volumes.List;
 import com.google.api.services.books.model.Volume;
 import com.google.api.services.books.model.Volumes;
 import com.google.api.services.books.Books;
-import org.springframework.boot.autoconfigure.data.ConditionalOnRepositoryType;
-import org.springframework.expression.spel.ast.NullLiteral;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.security.GeneralSecurityException;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 
 
 @Controller
 public class ClientController {
+    @RequestMapping("/Login")
+    public String login() {
+        return "Login";
+    }
+    @RequestMapping("/Register")
+    public String register() {
+        return "Register";
+    }
     @GetMapping ("/HomePage")
-    public String init(@RequestParam(name="errorString", required=false, defaultValue = "") String errorString, Model model){
+    public String init(@RequestParam(name="errorString", required=false, defaultValue = "") String errorString, Model model, HttpSession session){
         model.addAttribute("errorString");
-        return "HomePage";
+        return "HomePage.html";
     }
 
     @PostMapping("/SearchResults")
 //    public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
-    public String greeting(@RequestParam(name="searchInput", required=false, defaultValue = "") String searchInput, @RequestParam(name="type", required=false, defaultValue = "") String type, Model model) {
+    public String greeting(@RequestParam(name="searchInput", required=false, defaultValue = "") String searchInput, @RequestParam(name="type", required=false, defaultValue = "") String type, Model model, HttpSession session) {
         if(searchInput.equals("")){
             String errorString = "You left an input field blank. Please try again.";
             model.addAttribute("errorString", errorString);
-            return "HomePage";
+            return "HomePage.html";
         }
         String pref = "";
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
@@ -70,7 +75,7 @@ public class ClientController {
             if (volumes.getTotalItems() == 0 || volumes.getItems() == null) {
                 errorString = "No books were found. Please try again.";
                 model.addAttribute("errorString", errorString);
-                return "HomePage";
+                return "HomePage.html";
             }
             for (Volume volume : volumes.getItems()) {
                 Volume.VolumeInfo volumeInfo = volume.getVolumeInfo();
@@ -109,13 +114,13 @@ public class ClientController {
             }
         }
         catch(Exception e){
-            return "HomePage";
+            return "HomePage.html";
 
         }
         model.addAttribute("bookValues", bookValues);
         model.addAttribute("searchInput", searchInput);
         model.addAttribute("type", type);
-        return  "SearchResults";
+        return "SearchResults.html";
     }
 
     @PostMapping("/Details")
@@ -126,7 +131,7 @@ public class ClientController {
                           @RequestParam(name="isbn", required=true) String isbn,
                           @RequestParam(name="summary", required=true) String summary,
                           @RequestParam(name="rating", required=true) String rating,@RequestParam(name="noRatingFound",required = true) String noRatingFound,
-                          Model model){
+                          Model model, HttpSession session){
         model.addAttribute("searchInput", searchInput);
         model.addAttribute("type", type);
         model.addAttribute("link", link);
@@ -142,7 +147,7 @@ public class ClientController {
     }
 
     @PostMapping("/hello")
-    public String hello(@RequestParam(name="name", required=true) String name, Model model) {
+    public String hello(@RequestParam(name="name", required=true) String name, Model model, HttpSession session) {
 
 //        Books books = Books.Builder
 

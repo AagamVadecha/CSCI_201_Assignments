@@ -6,20 +6,15 @@
     <link rel="stylesheet" type="text/css" href="body.css">
 </head>
 <body>
-<style type="text/css">
-    input[type="submit"] {
-        padding:5px 15px;
-        background:#1D0807;
-        border:0 none;
-        color: white;
-        cursor:pointer;
-        -webkit-border-radius: 5px;
-        border-radius: 5px;
-    }
-</style>
     <div class = "page" >
         <div class = "header" style="height: 10%;">
-            <a href="HomePage"><img src = "bookworm.png" width = "10%"> </a>
+            <div id="col1" style="display:inline-block;">
+                <a href="HomePage"><img src = "bookworm.png" width = "10%"> </a>
+            </div>
+            <div id="col2" style="display:inline-block;">
+                <a href="Login">Login </a>
+                <a href="Register"> Register </a>
+            </div>
         </div>
         <br>
         <div class = "bodyBackground" style="display:flex;justify-content:center;align-items:center;">
@@ -34,7 +29,18 @@
                     <input type="radio" name="type" value="ISBN"> ISBN <br>
                     <input type="radio" name="type" value="Author"> <label style="margin-right: 39.75vw">Author</label>
                     <input type="radio" name="type" value="Publisher"> Publisher<br>
-                    <input type="submit" style="z-index: 1; position: absolute;right: 10vw;" value="Search!">
+                    <input type="submit" style= "        padding:5px 15px;
+                                                            background:#1D0807;
+                                                            border:0 none;
+                                                            color: white;
+                                                            cursor:pointer;
+                                                            -webkit-border-radius: 5px;
+                                                            border-radius: 5px;
+                                                            z-index: 1;
+                                                            position: absolute;
+                                                            right:
+                                                            10vw;"
+                           value="Search!">
                 </form>
             </div>
         </div>

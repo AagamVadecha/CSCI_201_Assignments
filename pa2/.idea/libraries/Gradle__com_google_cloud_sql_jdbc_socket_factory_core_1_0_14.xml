@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.google.cloud.sql:jdbc-socket-factory-core:1.0.14">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.cloud.sql/jdbc-socket-factory-core/1.0.14/d13c15a01c28193c3fef345008070dbc69989517/jdbc-socket-factory-core-1.0.14.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.cloud.sql/jdbc-socket-factory-core/1.0.14/31011509a306d6e11d8c3e1ae69335ff9ec04936/jdbc-socket-factory-core-1.0.14-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

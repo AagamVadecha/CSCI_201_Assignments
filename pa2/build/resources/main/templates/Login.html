@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <link rel="stylesheet" type="text/css" href="body.css">
+</head>
+<body style=" color: #707070;">
+<div class="row">
+    <div class="column">
+        <a href="HomePage"><img src = "bookworm.png" style="height:10vh;"> </a>
+    </div>
+    <div class="column2">
+        <form action = "/SearchResults" method="post">
+            <div class ="column" style="padding-top: 5.5vh;">
+                <input type = "text" style = "height: 2vh; width: 13vw;" name="searchInput" placeholder="What book is on your mind?"/>
+                <input type="image" src="magnifying_glass.png" style="height: 2vh;" value="Submit">
+            </div>
+            <div class="column"style="padding-top: 5vh;">
+                <input type="radio" name="type" value="name" id="name"> <label for = "name">Name</label> <br>
+                <input type="radio" name="type" value="ISBN" id="ISBN"> <label for = "ISBN">ISBN</label>
+            </div>
+            <div class="column"style="padding-top:5vh;">
+                <input type="radio" name="type" value="Author" id="Author"> <label for="Author">Author</label><br>
+                <input type="radio" name="type" value="Publisher" id="Publisher"> <label for="Publisher">Publisher</label>
+            </div>
+        </form>
+    </div>
+</div>
+    <form action="/Login" method="post">
+        <p> Username</p> <br>
+        <input type="text" name="Username"/>
+        <p> Password </p> <br>
+        <input type="text" name="Password"/>
+        <input type="submit" value="Sign In">
+    </form>
+</body>
+</html>
