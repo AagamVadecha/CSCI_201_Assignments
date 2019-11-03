@@ -142,6 +142,20 @@ public class ClientController {
     }
 
 
+    @GetMapping("/RemoveBook")
+    public void removeBook(HttpSession session, @RequestParam(name="bookID", required = true) String bookID){
+        boolean val = junctionRepository.findJunctionByAccount_UserIDAndBookID((Integer) session.getAttribute("userID"),bookID).isEmpty();
+        if(val){
+            Junction junction = new Junction();
+            Accounts account = accountRepository.findAccountsByUsernameEquals((String)session.getAttribute("username")).get(0);
+            junction.setAccount(account);
+            junction.setBookID(bookID);
+            junctionRepository.save(junction);
+
+        }else{
+            junctionRepository.removeJunctionsByAccount_UserIDAndBookID((Integer) session.getAttribute("userID"), bookID);
+        }
+    }
     @PostMapping("/Details")
     public String details(@RequestParam(name="searchInput", required=true) String searchInput, @RequestParam(name="type", required=true)
             String type,@RequestParam(name="link", required=true) String link, @RequestParam(name="title", required=true) String title,

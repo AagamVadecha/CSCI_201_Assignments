@@ -63,9 +63,14 @@ public class APIController {
 
     @PostMapping("/login")
     public String signIn(@RequestParam(name="username", required=false, defaultValue = "") String username, @RequestParam(name="password", required=false, defaultValue = "") String password, Model model,HttpSession session){
-        List<Accounts> account = accountRepository.findAccountsByUsernameEqualsAndPasswordEquals(username, password);
+        List<Accounts> account = accountRepository.findAccountsByUsernameEquals(username);
+        if(account.isEmpty()){
+            model.addAttribute("errorString", "This user does not exist.");
+            return "Login.html";
+        }
+        account = accountRepository.findAccountsByUsernameEqualsAndPasswordEquals(username, password);
         if(account.isEmpty()) {
-            model.addAttribute("errorString", "No account was found with this combination.");
+            model.addAttribute("errorString", "Incorrect password.");
             return "Login.html";
         }
         session.setAttribute("user", true);

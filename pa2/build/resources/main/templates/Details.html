@@ -14,7 +14,7 @@
     <div class="column2">
         <form action = "/SearchResults" method="post">
             <div class ="column" style="padding-top: 5.5vh;">
-                <input type = "text" style = "height: 2vh; width: 13vw;" name="searchInput" placeholder="What book is on your mind?"/>
+                <input type = "text" style = "height: 2vh; width: 8vw;" name="searchInput" placeholder="What book is on your mind?"/>
                 <input type="image" src="magnifying_glass.png" style="height: 2vh;" value="Submit">
             </div>
             <div class="column"style="padding-top: 5vh;">
@@ -29,7 +29,7 @@
     </div>
     <div class="column3" style="float:left;">
         <th:block th:if="${sessionActive}">
-            <a href="/Profile">Profile</a>
+            <a href="/Profile"><img src="profileIcon.png" style="height:5vh;"> </a>
         </th:block>
     </div>
 </div>
@@ -42,24 +42,53 @@
                 <input type="hidden" name="type" th:value="${type}">
                 <input type = "image" th:src="${link}" alt="No Image Found">
             </form>
-            <p style="color:red" th:text="${errorString}"/>
-            <form action="/addOrRemoveFavorites" method="post">
-                <input type="hidden" name="bookID" th:value="${bookID}">
-                <input type="hidden" name="type" th:value="${type}">
-                <input type="hidden" name="title" th:value="${title}">
-                <input type="hidden" name="searchInput" th:value="${searchInput}">
-                <input type="hidden" name="link" th:value="${link}">
-                <input type="hidden" name="author" th:value="${author}">
-                <input type="hidden" name="publisher" th:value="${publisher}">
-                <input type="hidden" name="date" th:value="${date}">
-                <input type="hidden" name="type" th:value="${type}">
-                <input type="hidden" name="isbn" th:value="${isbn}">
-                <input type="hidden" name="summary" th:value="${summary}">
-                <input type="hidden" name="rating" th:value="${rating}">
-                <input type="hidden" name="noRatingFound" th:value="${noRatingFound}">
-                <input type="hidden" name="searchInput" th:value="${searchInput}">
-                <input type="submit" th:value="${isFavorited}">
-            </form>
+            <div id ="error">
+
+            </div>
+            <p><button onclick="myFunction()" id="buttonText" th:text="${isFavorited}"></button></p>
+            <script th:inline="javascript">
+
+                function myFunction()
+                {
+                    /*<![CDATA[*/
+                    var y = /*[[${sessionActive}]]*/ false;
+
+                    if(!y){
+                        document.getElementById("error").innerHTML=" <p style=\"color:red\"> You are not logged in. Please log in to use this functionality. </p>";
+                    }
+                    else {
+                        var x = document.getElementById("buttonText");
+                        if (x.textContent === "Favorite") {
+                            x.textContent = "Remove";
+                        } else if (x.textContent === "Remove") {
+                            x.textContent = "Favorite";
+                        }
+                        var xmlhttp = new XMLHttpRequest();
+                        var bookID = /*[[${bookID}]]*/ null;
+                        xmlhttp.open("GET", "/RemoveBook?bookID=" + bookID, true);
+                        xmlhttp.send(bookID);
+                    }
+                    /*]]>*/
+                }
+            </script>
+<!--            <p style="color:red" th:text="${errorString}"/>-->
+<!--            <form action="/addOrRemoveFavorites" method="post">-->
+<!--                <input type="hidden" name="bookID" th:value="${bookID}">-->
+<!--                <input type="hidden" name="type" th:value="${type}">-->
+<!--                <input type="hidden" name="title" th:value="${title}">-->
+<!--                <input type="hidden" name="searchInput" th:value="${searchInput}">-->
+<!--                <input type="hidden" name="link" th:value="${link}">-->
+<!--                <input type="hidden" name="author" th:value="${author}">-->
+<!--                <input type="hidden" name="publisher" th:value="${publisher}">-->
+<!--                <input type="hidden" name="date" th:value="${date}">-->
+<!--                <input type="hidden" name="type" th:value="${type}">-->
+<!--                <input type="hidden" name="isbn" th:value="${isbn}">-->
+<!--                <input type="hidden" name="summary" th:value="${summary}">-->
+<!--                <input type="hidden" name="rating" th:value="${rating}">-->
+<!--                <input type="hidden" name="noRatingFound" th:value="${noRatingFound}">-->
+<!--                <input type="hidden" name="searchInput" th:value="${searchInput}">-->
+<!--                <input type="submit" th:value="${isFavorited}">-->
+<!--            </form>-->
         </td>
         <td style="border-top: 1px dotted #ddd; border-bottom: 1px dotted #ddd;">
             <H1>
