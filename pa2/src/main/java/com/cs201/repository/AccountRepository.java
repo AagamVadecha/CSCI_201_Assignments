@@ -9,10 +9,9 @@ import java.util.List;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Accounts, Long> {
-    @Query(nativeQuery = true, value= "SELECT u from Accounts u where u.username=?1")
-    List<Accounts> findAccountsByUsername(String username);
+    List<Accounts> findAccountsByUsernameEquals(String username);
 
-    @Query(nativeQuery = true, value= "SELECT u from Accounts u where u.username=?1 and u.password=?2")
-    List<Accounts> findAccount(String username, String password);
+    List<Accounts> findAccountsByUsernameEqualsAndPasswordEquals(String username, String password);
+
 
 }

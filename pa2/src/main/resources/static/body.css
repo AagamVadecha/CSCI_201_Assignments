@@ -22,12 +22,15 @@
 }
 .column2{
     float:left;
-    width: 70%;
+    width: 50%;
     padding: 5px;
     vertical-align: middle;
 }
 .column3{
-    height: 50%;
+    width: 10%;
+    height: 10vh;
+    vertical-align: middle;
+    padding-top: 5vh;
 }
 .row::after {
     content: "";

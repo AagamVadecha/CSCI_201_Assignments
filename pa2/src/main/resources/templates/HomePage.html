@@ -12,8 +12,15 @@
                 <a href="HomePage"><img src = "bookworm.png" width = "10%"> </a>
             </div>
             <div id="col2" style="display:inline-block;">
-                <a href="Login">Login </a>
-                <a href="Register"> Register </a>
+                <th:block th:if="${sessionActive}">
+                    <a href="/logout">Logout</a>
+                    <a href="/Profile">Profile</a>
+                </th:block>
+                <th:block th:unless="${sessionActive}">
+                    <a href="/Login">Login </a>
+                    <a href="/Register"> Register </a>
+                </th:block>
+
             </div>
         </div>
         <br>

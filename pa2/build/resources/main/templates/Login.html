@@ -28,12 +28,13 @@
         </form>
     </div>
 </div>
-    <form action="/Login" method="post">
+    <p style="color:red" th:text="${errorString}"/>
+    <form action="/login" method="post">
         <p> Username</p> <br>
-        <input type="text" name="Username"/>
+        <input type="text" style="width: 80vw;height: 3vh;" name="username"/>
         <p> Password </p> <br>
-        <input type="text" name="Password"/>
-        <input type="submit" value="Sign In">
+        <input type="text" style="width: 80vw;height: 3vh;" name="password"/>
+        <input type="submit" style="width: 80vw;height: 3vh;" value="Sign In">
     </form>
 </body>
 </html>

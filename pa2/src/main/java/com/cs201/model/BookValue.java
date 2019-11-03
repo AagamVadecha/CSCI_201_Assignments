@@ -37,6 +37,7 @@ public class BookValue{
     public String getNoRatingFound(){
         return noRatingFound;
     }
+    public String getBookID(){ return bookID; }
 
     String bookName;
     String bookLink;
@@ -47,8 +48,9 @@ public class BookValue{
     int rating;
     String publisher;
     String noRatingFound;
+    String bookID;
 
-    public BookValue(String bookName, String bookLink, String bookAuthors, String bookSummary, String date, String isbn13, int rating, String publisher, String noRatingFound) {
+    public BookValue(String bookName, String bookLink, String bookAuthors, String bookSummary, String date, String isbn13, int rating, String publisher, String noRatingFound, String bookID) {
         this.bookName = bookName;
         this.bookLink = bookLink;
         this.bookAuthor = bookAuthors;
@@ -58,5 +60,6 @@ public class BookValue{
         this.rating = rating;
         this.publisher = publisher;
         this.noRatingFound = noRatingFound;
+        this.bookID = bookID;
     }
 }

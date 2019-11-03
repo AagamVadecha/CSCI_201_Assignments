@@ -14,7 +14,7 @@
         <div class="column2">
             <form action = "/SearchResults" method="post">
                 <div class ="column" style="padding-top: 5.5vh;">
-                    <input type = "text" style = "height: 2vh; width: 13vw;" name="searchInput" placeholder="What book is on your mind?"/>
+                    <input type = "text" style = "height: 2vh; width: 8vw;" name="searchInput" placeholder="What book is on your mind?"/>
                     <input type="image" src="magnifying_glass.png" style="height: 2vh;" value="Submit">
                 </div>
                 <div class="column"style="padding-top: 5vh;">
@@ -27,12 +27,18 @@
                 </div>
             </form>
         </div>
+        <div class="column3" style="float:left;">
+            <th:block th:if="${sessionActive}">
+                <a href="/Profile">Profile</a>
+            </th:block>
+        </div>
     </div>
     <div style="border-top: 1px solid #ddd; color: #707070;">
         <h2>
             <p th:text="'Results for: &quot;' +${searchInput} + '&quot;'" />
         </h2>
         <table>
+
             <!--/*@thymesVar id="bookValues" type="ArrayList<com.cs201.model.BookValue>"*/-->
             <tr th:each="bookValue : ${bookValues}" >
                 <td style="border-top: 1px dotted #ddd; ">
@@ -48,6 +54,7 @@
                         <input type="hidden" name="summary" th:value="${bookValue.getBookSummary()}">
                         <input type="hidden" name="rating" th:value="${bookValue.getRating()}">
                         <input type="hidden" name="noRatingFound" th:value="${bookValue.getNoRatingFound()}">
+                        <input type="hidden" name="bookID" th:value="${bookValue.getBookID()}">
                         <input type = "image" th:src="${bookValue.getBookLink()}" alt="No Image Found">
                     </form>
                 </td>
