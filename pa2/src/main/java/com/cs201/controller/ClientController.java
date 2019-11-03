@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 @Controller
 public class ClientController {
-    @RequestMapping("/Login")
+    @RequestMapping("/login")
     public String login() {
         return "Login";
     }

@@ -21,7 +21,7 @@ public class APIController {
     @Autowired
     JunctionRepository junctionRepository;
 
-    @PostMapping("/createAccount")
+        @PostMapping("/createAccount")
     public String insertAccount(@RequestParam(name="username", required=false, defaultValue = "") String username, @RequestParam(name="password", required=false, defaultValue = "") String password, @RequestParam(name="password2", required=false, defaultValue = "") String password2, Model model, HttpServletRequest request, HttpSession session) {
         if(username.equals("") || password.equals("") || password2.equals("")){
             model.addAttribute("errorString", "One or more of the input fields are blank. Please try again.");
