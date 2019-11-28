@@ -190,6 +190,14 @@ public class HangmanServer {
     }
 
 
+    public static boolean containsValue(String string, String name) {
+        if(string == null || string == ""){
+            System.out.println(name + " is a required parameter in the configuration file.");
+            return false;
+        }
+        return true;
+    }
+
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         String filename = "";
@@ -198,7 +206,7 @@ public class HangmanServer {
         String connection = "";
         String DBUsername = "";
         String DBPassword = "";
-        String wordFile = "";
+        String SecretWordFile = "";
 
 
         boolean validFile = false;
@@ -218,7 +226,7 @@ public class HangmanServer {
                 connection = configFile.getProperty("DBConnection");
                 DBUsername = configFile.getProperty("DBUsername");
                 DBPassword = configFile.getProperty("DBPassword");
-                wordFile = configFile.getProperty("SecretWordFile");
+                SecretWordFile = configFile.getProperty("SecretWordFile");
                 validFile = true;
             } catch (FileNotFoundException exception) {
                 System.out.println("Configuration file " + filename + " could not be found.");
@@ -228,44 +236,26 @@ public class HangmanServer {
         } while (!validFile);
 
         boolean isValid = true;
-        if (hostname == null || hostname.equals("")) {
-            System.out.println("ServerHostname is a required parameter in the configuration file.");
-            isValid = false;
-        }
-        if (port == null || port.equals("")) {
-            System.out.println("ServerPort is a required parameter in the configuration file.");
-            isValid = false;
-        }
-        if (connection == null || connection.equals("")) {
-            System.out.println("DBConnection is a required parameter in the configuration file.");
-            isValid = false;
-        }
-        if (DBUsername == null || DBUsername.equals("")) {
-            System.out.println("DBUsername is a required parameter in the configuration file.");
-            isValid = false;
-        }
-        if (DBPassword == null || DBPassword.equals("")) {
-            System.out.println("DBPassword is a required parameter in the configuration file.");
-            isValid = false;
-        }
-        if (wordFile == null || wordFile.equals("")) {
-            System.out.println("SecretWordFile is a required parameter in the configuration file.");
-            isValid = false;
-        }
+        isValid&=containsValue(hostname,"hostname");
+        isValid&=containsValue(port,"port");
+        isValid&=containsValue(connection, "connection");
+        isValid&=containsValue(DBUsername,"DBUsername");
+        isValid&=containsValue(DBPassword,"DBPassword");
+        isValid&=containsValue(SecretWordFile,"SecretWordFile");
         if (isValid) {
             System.out.println("Server Hostname - " + hostname);
             System.out.println("Server Port - " + port);
             System.out.println("Database Connection String - " + connection);
             System.out.println("Database Username - " + DBUsername);
             System.out.println("Database Password - " + DBPassword);
-            System.out.println("Secret Word File - " + wordFile + "\n");
+            System.out.println("Secret Word File - " + SecretWordFile + "\n");
         } else {
-            System.exit(0);
+            System.exit(-1);
         }
 
         words = new ArrayList<String>();
         String word = "";
-        try (BufferedReader br = new BufferedReader(new FileReader(wordFile));) {
+        try (BufferedReader br = new BufferedReader(new FileReader(SecretWordFile))) {
             word = br.readLine();
             while (word != null) {
                 words.add(word);
@@ -302,6 +292,8 @@ public class HangmanServer {
         }
         scan.close();
     }
+
+
 
 
 }
