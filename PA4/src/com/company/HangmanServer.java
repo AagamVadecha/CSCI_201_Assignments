@@ -84,98 +84,107 @@ public class HangmanServer {
     public void notify(String message, String name, ServerThread st) {
         if (message != null) {
             HangmanGame game = games.get(name.toLowerCase());
-            if (message.equals("JOIN SUCCESSFUL")) {
-                for (ServerThread player : game.getPlayers()) {
-                    if (player != st) {
-                        st.send(message);
-                        st.send("User " + player.getUser().getUsername() + " is in the game.");
-                        st.send(player.getUser().winLoss());
+            switch(message) {
+                case "JOIN SUCCESSFUL":
+                    for (ServerThread player : game.getPlayers()) {
+                        if (player != st) {
+                            st.send(message);
+                            st.send("User " + player.getUser().getUsername() + " is in the game.");
+                            st.send(player.getUser().winLoss());
 
-                        player.send("USER JOINED");
-                        player.send("User " + st.getUser().getUsername() + " is in the game.");
-                        player.send(st.getUser().winLoss());
+                            player.send("USER JOINED");
+                            player.send("User " + st.getUser().getUsername() + " is in the game.");
+                            player.send(st.getUser().winLoss());
+                        }
                     }
-                }
-            } else if (message.equals("ALL USERS HAVE JOINED")) {
-                nextPlayer(game, message, null);
-            } else if (message.equals("WAITING FOR USER(S) TO JOIN")) {
-                for (ServerThread player : game.getPlayers()) {
-                    player.send(message);
-                    player.send(game.getNumPlayers() - game.getPlayers().size());
-                }
-            } else if (message.equals("GUESS - LETTER") || message.equals("GUESS - WORD")) {
-                for (ServerThread player : game.getPlayers()) {
-                    if (player != st) {
+                    break;
+
+                case "ALL USERS HAVE JOINED":
+                    nextPlayer(game, message, null);
+                    break;
+
+                case "WAITING FOR USER(S) TO JOIN":
+                    for (ServerThread player : game.getPlayers()) {
                         player.send(message);
-                        player.send(st.getUser().getUsername());
-                        player.send(st.getGuess());
+                        player.send(game.getNumPlayers() - game.getPlayers().size());
                     }
-                }
-            } else if (message.equals("LETTER - CORRECT GUESS") || message.equals("LETTER - INCORRECT GUESS")) {
-                nextPlayer(game, message, st.getGuess());
-            } else if (message.equals("LAST LETTER GUESSED")) {
-                for (ServerThread player : game.getPlayers()) {
-                    if (player != st) {
-                        player.send("OPPONENT WIN - LETTER");
-                        player.send(st.getUser().getUsername());
-                    } else {
+                    break;
+
+                case "GUESS - LETTER": case "GUESS - WORD":
+                    for (ServerThread player : game.getPlayers()) {
+                        if (player != st) {
+                            player.send(message);
+                            player.send(st.getUser().getUsername());
+                            player.send(st.getGuess());
+                        }
+                    }
+                    break;
+
+                case "LETTER - CORRECT GUESS": case "LETTER - INCORRECT GUESS":
+                    nextPlayer(game, message, st.getGuess());
+                    break;
+
+                case "LAST LETTER GUESSED":
+                    for (ServerThread player : game.getPlayers()) {
+                        if (player != st) {
+                            player.send("OPPONENT WIN - LETTER");
+                            player.send(st.getUser().getUsername());
+                        } else {
+                            player.send(message);
+                        }
+
+                        for (ServerThread s : game.getPlayers()) {
+                            player.send("PLAYER RECORD");
+                            player.send(s.getUser().winLoss());
+                        }
+                        player.send("GAME EXIT");
+                    }
+                    break;
+
+                case "WORD - CORRECT GUESS":
+                    for (ServerThread player : game.getPlayers()) {
+                        if (player != st) {
+                            player.send("OPPONENT WIN - WORD");
+                            player.send(st.getUser().getUsername());
+                        } else {
+                            player.send(message);
+                        }
+
+                        for (ServerThread s : game.getPlayers()) {
+                            player.send("PLAYER RECORD");
+                            player.send(s.getUser().winLoss());
+                        }
+                        player.send("GAME EXIT");
+                    }
+                    break;
+
+                case "WORD - INCORRECT GUESS":
+                    for (ServerThread player : game.getPlayers()) {
+                        if (player != st) {
+                            player.send("OPPONENT LOSE");
+                            player.send(st.getUser().getUsername());
+                        } else {
+                            player.send(message);
+                        }
+                    }
+                    break;
+
+                case "NO GUESSES REMAINING": case "NO PLAYERS REMAINING":
+                    for (ServerThread player : game.getPlayers()) {
                         player.send(message);
-                    }
+                        player.send(game.getSecretWord());
 
-                    for (ServerThread s : game.getPlayers()) {
-                        player.send("PLAYER RECORD");
-                        player.send(s.getUser().winLoss());
+                        for (ServerThread s : game.getPlayers()) {
+                            player.send("PLAYER RECORD");
+                            player.send(s.getUser().winLoss());
+                        }
+                        player.send("GAME EXIT");
                     }
-                    player.send("GAME EXIT");
-                }
-            } else if (message.equals("WORD - CORRECT GUESS")) {
-                for (ServerThread player : game.getPlayers()) {
-                    if (player != st) {
-                        player.send("OPPONENT WIN - WORD");
-                        player.send(st.getUser().getUsername());
-                    } else {
-                        player.send(message);
-                    }
+                    break;
 
-                    for (ServerThread s : game.getPlayers()) {
-                        player.send("PLAYER RECORD");
-                        player.send(s.getUser().winLoss());
-                    }
-                    player.send("GAME EXIT");
-                }
-            } else if (message.equals("WORD - INCORRECT GUESS")) {
-                for (ServerThread player : game.getPlayers()) {
-                    if (player != st) {
-                        player.send("OPPONENT LOSE");
-                        player.send(st.getUser().getUsername());
-                    } else {
-                        player.send(message);
-                    }
-                }
-            } else if (message.equals("NO GUESSES REMAINING")) {
-                for (ServerThread player : game.getPlayers()) {
-                    player.send(message);
-                    player.send(game.getSecretWord());
-
-                    for (ServerThread s : game.getPlayers()) {
-                        player.send("PLAYER RECORD");
-                        player.send(s.getUser().winLoss());
-                    }
-                    player.send("GAME EXIT");
-                }
-            } else if (message.equals("NO PLAYERS REMAINING")) {
-                for (ServerThread player : game.getPlayers()) {
-                    player.send(message);
-                    player.send(game.getSecretWord());
-
-                    for (ServerThread s : game.getPlayers()) {
-                        player.send("PLAYER RECORD");
-                        player.send(s.getUser().winLoss());
-                    }
-                    player.send("GAME EXIT");
-                }
-            } else if (message.equals("CONTINUE GAME")) {
-                nextPlayer(game, message, null);
+                case "CONTINUE GAME":
+                    nextPlayer(game, message, null);
+                    break;
             }
         }
     }
