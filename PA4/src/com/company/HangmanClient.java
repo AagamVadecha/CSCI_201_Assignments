@@ -353,7 +353,7 @@ public class HangmanClient extends Thread {
         isValid&=containsValue(DBUsername,"DBUsername");
         isValid&=containsValue(DBPassword,"DBPassword");
         isValid&=containsValue(SecretWordFile,"SecretWordFile");
-        
+
         if (isValid) {
             System.out.println("Server Hostname - " + hostname);
             System.out.println("Server Port - " + port);
