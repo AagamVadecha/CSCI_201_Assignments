@@ -5,9 +5,19 @@ public class Account {
     private String password;
     private int wins;
     private int losses;
+    private boolean lost;
+    private int userID;
 
     public Account(){
+        lost = false;
+    }
 
+    public int getUserID(){
+        return userID;
+    }
+
+    public void setUserID(int userID){
+        this.userID = userID;
     }
 
     public String getUsername() {
@@ -43,6 +53,13 @@ public class Account {
     }
 
     public String winLoss(){
-        return getUsername() + "'s Record\n--------------\nWins - " + getWins() + "\nLosses - " +getLosses();
+        return getUsername() + "'s Record\n--------------\nWins - " + wins + "\nLosses - " + losses;
+    }
+
+    public boolean hasLost(){
+        return lost;
+    }
+    public void lose() {
+        lost = true;
     }
 }
