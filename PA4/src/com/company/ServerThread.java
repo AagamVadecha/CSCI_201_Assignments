@@ -179,7 +179,7 @@ public class ServerThread extends Thread {
                                         ps.executeUpdate();
                                     } else {
                                         Account opponent = player.getUser();
-                                        opponent.setLosses(opponent.getLosses() + 1);
+                                        opponent.incrementLoss();
 
                                         ps = conn.prepareStatement("UPDATE User SET numLosses = ? WHERE accountname = ?");
                                         ps.setInt(1, opponent.getLosses());
@@ -206,7 +206,7 @@ public class ServerThread extends Thread {
                                 System.out.println(timestamp + " " + account.getUsername() + " - no guesses remaining. All players have lost the game.");
                                 for (ServerThread player : game.getPlayers()) {
                                     Account account = player.getUser();
-                                    account.setLosses(account.getLosses() + 1);
+                                    account.incrementLoss();
 
                                     ps = conn.prepareStatement("UPDATE User SET numLosses = ? WHERE accountname = ?");
                                     ps.setInt(1, account.getLosses());
@@ -236,7 +236,7 @@ public class ServerThread extends Thread {
                                     ps.executeUpdate();
                                 } else {
                                     Account opponent = player.getUser();
-                                    opponent.setLosses(opponent.getLosses() + 1);
+                                    opponent.incrementLoss();
 
                                     ps = conn.prepareStatement("UPDATE User SET numLosses = ? WHERE accountname = ?");
                                     ps.setInt(1, opponent.getLosses());
@@ -261,7 +261,7 @@ public class ServerThread extends Thread {
                                 System.out.println(timestamp + " " + account.getUsername() + " - no guesses remaining. All players have lost the game.");
                                 for (ServerThread player : game.getPlayers()) {
                                     Account account = player.getUser();
-                                    account.setLosses(account.getLosses() + 1);
+                                    account.incrementLoss();
 
                                     ps = conn.prepareStatement("UPDATE User SET numLosses = ? WHERE accountname = ?");
                                     ps.setInt(1, account.getLosses());
@@ -282,7 +282,7 @@ public class ServerThread extends Thread {
                                     System.out.println(timestamp + " " + account.getUsername() + " - no players remaining. All players have lost the game.");
                                     for (ServerThread player : game.getPlayers()) {
                                         Account account = player.getUser();
-                                        account.setLosses(account.getLosses() + 1);
+                                        account.incrementLoss();
 
                                         ps = conn.prepareStatement("UPDATE User SET numLosses = ? WHERE accountname = ?");
                                         ps.setInt(1, account.getLosses());
