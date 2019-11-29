@@ -31,7 +31,7 @@ public class HangmanServer {
     }
 
     public void gameStart(String name, HangmanGame game){
-        game.setSecretWord(words.get((int) (Math.random()*(words.size()+1))));
+        game.setSecretWord(words.get((int) (Math.random()*(words.size()))));
         games.put(name.toLowerCase(), game);
     }
 
@@ -235,14 +235,14 @@ public class HangmanServer {
             }
         } while (!validFile);
 
-        boolean isValid = true;
-        isValid&=containsValue(hostname,"hostname");
-        isValid&=containsValue(port,"port");
-        isValid&=containsValue(connection, "connection");
-        isValid&=containsValue(DBUsername,"DBUsername");
-        isValid&=containsValue(DBPassword,"DBPassword");
-        isValid&=containsValue(SecretWordFile,"SecretWordFile");
-        if (isValid) {
+        boolean isValidFile = true;
+        isValidFile&=containsValue(hostname,"hostname");
+        isValidFile&=containsValue(port,"port");
+        isValidFile&=containsValue(connection, "connection");
+        isValidFile&=containsValue(DBUsername,"DBUsername");
+        isValidFile&=containsValue(DBPassword,"DBPassword");
+        isValidFile&=containsValue(SecretWordFile,"SecretWordFile");
+        if (isValidFile) {
             System.out.println("Server Hostname - " + hostname);
             System.out.println("Server Port - " + port);
             System.out.println("Database Connection String - " + connection);
@@ -256,21 +256,19 @@ public class HangmanServer {
         words = new ArrayList<String>();
         String word = "";
         try (BufferedReader br = new BufferedReader(new FileReader(SecretWordFile))) {
-            word = br.readLine();
+            word = br.readLine().trim();
             while (word != null) {
                 words.add(word);
                 word = br.readLine();
             }
-        } catch (FileNotFoundException fnfe) {
-            System.out.println("FNFE: " + fnfe.getMessage());
-        } catch (IOException ioe) {
-            System.out.println("IOE: " + ioe.getMessage());
+        } catch (Exception e){
+            System.out.println("Could not find a file");
+            System.exit(0);
         }
 
         Connection conn = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
-
             System.out.print("Trying to connect to database...");
             conn = DriverManager.getConnection(connection, DBUsername, DBPassword);
             System.out.println("Connected!\n");

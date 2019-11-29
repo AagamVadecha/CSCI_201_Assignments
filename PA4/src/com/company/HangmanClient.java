@@ -33,8 +33,8 @@ public class HangmanClient extends Thread {
 
             getUserLogin();
             this.start();
-        } catch (IOException ioe) {
-            System.out.println("IOE: " + ioe.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error");
         }
     }
 
@@ -50,7 +50,7 @@ public class HangmanClient extends Thread {
                             for (int i = 0; i < 4; i++) {
                                 System.out.println(br.readLine());
                             }
-                            playGame();
+                            getGameOption();
                             break;
 
                         case "INCORRECT PASSWORD":
@@ -65,7 +65,7 @@ public class HangmanClient extends Thread {
                             if (input.toLowerCase().equals("yes") || input.toLowerCase().equals("y")) {
                                 System.out.print("Would you like to use the username and password above? ");
                                 input = scanner.nextLine();
-                                if (input.toLowerCase().equals("yes") || input.toLowerCase().equals("y")) {
+                                if (input.equalsIgnoreCase("yes") || input.equalsIgnoreCase("y")) {
                                     pw.println("NEW ACCOUNT");
                                     pw.println(this.username);
                                     pw.println(this.password);
@@ -187,8 +187,9 @@ public class HangmanClient extends Thread {
                         case "PLAYER RECORD":
                             for (int i = 0; i < 4; i++) {
                                 System.out.print("\n" + br.readLine());
+                                if(i==3)
+                                    System.out.print("\n");
                             }
-                            System.out.println();
                             break;
 
                         case "GAME EXIT":
@@ -197,14 +198,14 @@ public class HangmanClient extends Thread {
                     }
                 }
                 }
-            } catch (IOException e) {
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
         }
     }
-
-    public void playGame() {
-        getGameOption();
-    }
+//
+//    public void playGame() {
+//        getGameOption();
+//    }
 
     public void getUserLogin() {
         pw.println("LOGIN");
@@ -345,16 +346,16 @@ public class HangmanClient extends Thread {
             }
         } while (true);
 
-        boolean isValid = true;
+        boolean isValidFile = true;
 
-        isValid&=containsValue(hostname,"hostname");
-        isValid&=containsValue(port,"port");
-        isValid&=containsValue(connection, "connection");
-        isValid&=containsValue(DBUsername,"DBUsername");
-        isValid&=containsValue(DBPassword,"DBPassword");
-        isValid&=containsValue(SecretWordFile,"SecretWordFile");
+        isValidFile&=containsValue(hostname,"hostname");
+        isValidFile&=containsValue(port,"port");
+        isValidFile&=containsValue(connection, "connection");
+        isValidFile&=containsValue(DBUsername,"DBUsername");
+        isValidFile&=containsValue(DBPassword,"DBPassword");
+        isValidFile&=containsValue(SecretWordFile,"SecretWordFile");
 
-        if (isValid) {
+        if (isValidFile) {
             System.out.println("Server Hostname - " + hostname);
             System.out.println("Server Port - " + port);
             System.out.println("Database Connection String - " + connection);
