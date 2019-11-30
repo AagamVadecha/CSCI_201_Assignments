@@ -1,14 +1,7 @@
 package com.company;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
-import java.util.Properties;
 import java.util.Scanner;
 
 public class HangmanClient extends Thread {
@@ -21,7 +14,7 @@ public class HangmanClient extends Thread {
     private String gameName;
     private String displayedWord;
 
-    public HangmanClient(String name, int port){
+    public HangmanClient(String name, int port) {
         Socket s = null;
         try {
             System.out.print("Trying to connect to server...");
@@ -40,7 +33,8 @@ public class HangmanClient extends Thread {
 
     public void run() {
         try {
-            while (true) {
+            boolean running = true;
+            while (running) {
                 String line = br.readLine();
 
                 if (line != null) {
@@ -88,7 +82,8 @@ public class HangmanClient extends Thread {
                             getGameOption();
                             break;
 
-                        case "JOIN SUCCESSFUL": case "USER JOINED":
+                        case "JOIN SUCCESSFUL":
+                        case "USER JOINED":
                             System.out.println("\n" + br.readLine() + "\n");
                             for (int i = 0; i < 4; i++) {
                                 System.out.println(br.readLine());
@@ -187,25 +182,22 @@ public class HangmanClient extends Thread {
                         case "PLAYER RECORD":
                             for (int i = 0; i < 4; i++) {
                                 System.out.print("\n" + br.readLine());
-                                if(i==3)
+                                if (i == 3)
                                     System.out.print("\n");
                             }
                             break;
 
                         case "GAME EXIT":
                             System.out.println("\nThank you for playing Hangman!");
+                            running = false;
                             break;
                     }
                 }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-//
-//    public void playGame() {
-//        getGameOption();
-//    }
 
     public void getUserLogin() {
         pw.println("LOGIN");
@@ -232,6 +224,7 @@ public class HangmanClient extends Thread {
             pw.println(gameName);
         }
     }
+
     public void getGuessOption(int num) {
         int input = getIntInput(displayGuessOptions(num), "What would you like to do? ", "That is not a valid option.", 1, 2);
 
@@ -253,8 +246,7 @@ public class HangmanClient extends Thread {
     }
 
     public static String displayGuessOptions(int num) {
-        return "\nYou have " + num + " incorrect guesses remaining." +
-                "\n\t1) Guess a letter.\n\t2) Guess the word.\n";
+        return "\nYou have " + num + " incorrect guesses remaining.\n\t1) Guess a letter.\n\t2) Guess the word.\n";
     }
 
     public static int getIntInput(String display, String prompt, String error, int min, int max) {
@@ -272,7 +264,8 @@ public class HangmanClient extends Thread {
                 System.out.print(prompt);
                 scanner.nextLine();
             }
-            num = scanner.nextInt(); scanner.nextLine();
+            num = scanner.nextInt();
+            scanner.nextLine();
             if (num < min || num > max) {
                 System.out.println("\n" + error);
             }
@@ -289,7 +282,7 @@ public class HangmanClient extends Thread {
                 System.out.print(prompt);
                 scanner.nextLine();
             }
-            str = scanner.nextLine();
+            str = scanner.nextLine().trim();
             if (str.length() != 1) {
                 System.out.println("\n" + error);
             } else if (word.toLowerCase().indexOf(str.toLowerCase()) != -1) {
@@ -303,7 +296,7 @@ public class HangmanClient extends Thread {
     }
 
     public static boolean containsValue(String string, String name) {
-        if(string == null || string == ""){
+        if (string == null || string == "") {
             System.out.println(name + " is a required parameter in the configuration file.");
             return false;
         }
@@ -314,59 +307,24 @@ public class HangmanClient extends Thread {
     public static void main(String[] args) {
         scanner = new Scanner(System.in);
         String filename = "";
-        String hostname = "";
-        String port = "";
-        String connection = "";
-        String DBUsername = "";
-        String DBPassword = "";
-        String SecretWordFile = "";
-
+        configFileProperties properties = null;
+        boolean validFile = false;
         do {
             System.out.print("What is the name of the configuration file? ");
             filename = scanner.nextLine();
-
-            try (InputStream is = new FileInputStream(filename);) {
-                Properties configFile = new Properties();
-                if (is != null) {
-                    configFile.load(is);
-                }
-
-                System.out.println("\nReading config file...");
-                hostname = configFile.getProperty("ServerHostname");
-                port = configFile.getProperty("ServerPort");
-                connection = configFile.getProperty("DBConnection");
-                DBUsername = configFile.getProperty("DBUsername");
-                DBPassword = configFile.getProperty("DBPassword");
-                SecretWordFile = configFile.getProperty("SecretWordFile");
-                break;
-            } catch (FileNotFoundException fnfe) {
+            try (InputStream is = new FileInputStream(filename)) {
+                properties = new configFileProperties(is);
+                validFile = true;
+            } catch (FileNotFoundException exception) {
                 System.out.println("Configuration file " + filename + " could not be found.");
-            } catch (IOException ioe) {
-                System.out.println("IOE: " + ioe.getMessage());
+            } catch (Exception e) {
+                System.out.println("Other Exception: " + e.getMessage());
             }
-        } while (true);
+        } while (!validFile);
 
-        boolean isValidFile = true;
+        HangmanServer.validFile(properties, containsValue(properties.getHostname(), "hostname"), containsValue(properties.getPort(), "port"), containsValue(properties.getConnection(), "connection"), containsValue(properties.getDBUsername(), "DBUsername"), containsValue(properties.getDBPassword(), "DBPassword"), containsValue(properties.getSecretWordFile(), "SecretWordFile"));
 
-        isValidFile&=containsValue(hostname,"hostname");
-        isValidFile&=containsValue(port,"port");
-        isValidFile&=containsValue(connection, "connection");
-        isValidFile&=containsValue(DBUsername,"DBUsername");
-        isValidFile&=containsValue(DBPassword,"DBPassword");
-        isValidFile&=containsValue(SecretWordFile,"SecretWordFile");
-
-        if (isValidFile) {
-            System.out.println("Server Hostname - " + hostname);
-            System.out.println("Server Port - " + port);
-            System.out.println("Database Connection String - " + connection);
-            System.out.println("Database Username - " + DBUsername);
-            System.out.println("Database Password - " + DBPassword);
-            System.out.println("Secret Word File - " + SecretWordFile + "\n");
-        } else {
-            System.exit(-1);
-        }
-
-        new HangmanClient(hostname, Integer.parseInt(port));
+        new HangmanClient(properties.getHostname(), Integer.parseInt(properties.getPort()));
     }
 
 }

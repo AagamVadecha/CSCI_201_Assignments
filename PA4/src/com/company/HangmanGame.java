@@ -12,26 +12,11 @@ public class HangmanGame {
     private int guesses;
     private int turn;
 
-
-    public HangmanGame(){
-        players = new Vector<ServerThread>();
-        guesses = 7;
-    }
-
     public HangmanGame(String name){
         this.name = name;
         players = new Vector<ServerThread>();
         guesses = 7;
         turn = 0;
-    }
-
-    public HangmanGame(String name, int numPlayers, ServerThread st, String secretWord) {
-        this.name = name;
-        this.numPlayers = numPlayers;
-        this.players = new Vector<ServerThread>();
-        this.players.add(st);
-        this.secretWord = secretWord;
-        this.guesses = 7;
     }
 
     public int getNumPlayers() {
@@ -46,10 +31,7 @@ public class HangmanGame {
         return players;
     }
 
-    public void setPlayers(Vector<ServerThread> players) {
-        this.players = players;
-        this.validPlayers = players;
-    }
+
 
     public String getName() {
         return name;
@@ -63,9 +45,6 @@ public class HangmanGame {
         return true;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getSecretWord() {
         return secretWord;
@@ -85,10 +64,6 @@ public class HangmanGame {
 
     public int getGuesses() {
         return guesses;
-    }
-
-    public void setGuesses(int guesses) {
-        this.guesses = guesses;
     }
 
     public void lowerGuesses(){

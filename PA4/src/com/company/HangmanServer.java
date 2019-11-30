@@ -38,8 +38,7 @@ public class HangmanServer {
     public void removeGame(String name) {
         games.remove(name.toLowerCase());
     }
-
-    public HangmanGame getGame(String name) {
+        public HangmanGame getGame(String name) {
         return games.get(name.toLowerCase());
     }
 
@@ -60,13 +59,13 @@ public class HangmanServer {
 
     public void nextPlayer(HangmanGame game, String message, String guess) {
         for (ServerThread player : game.getPlayers()) {
-            int playerID = player.getUser().getUserID();
+            int playerID = player.getAccount().getAccountID();
             player.send(message);
             if (guess != null) {
                 player.send(guess);
             }
             player.send(game.getGuessedWord());
-            while (game.getPlayers().get(game.getTurn()).getUser().hasLost()) {
+            while (game.getPlayers().get(game.getTurn()).getAccount().hasLost()) {
                 game.nextTurn();
             }
             if (playerID == game.getTurn()) {
@@ -75,7 +74,7 @@ public class HangmanServer {
             } else {
                 player.send("WAITING FOR OPPONENT");
                 player.send(game.getGuesses());
-                player.send(game.getPlayers().get(game.getTurn()).getUser().getUsername());
+                player.send(game.getPlayers().get(game.getTurn()).getAccount().getUsername());
             }
         }
         game.nextTurn();
@@ -89,17 +88,17 @@ public class HangmanServer {
                     for (ServerThread player : game.getPlayers()) {
                         if (player != st) {
                             st.send(message);
-                            st.send("User " + player.getUser().getUsername() + " is in the game.");
-                            st.send(player.getUser().winLoss());
+                            st.send("User " + player.getAccount().getUsername() + " is in the game.");
+                            st.send(player.getAccount().getWinLoss());
 
                             player.send("USER JOINED");
-                            player.send("User " + st.getUser().getUsername() + " is in the game.");
-                            player.send(st.getUser().winLoss());
+                            player.send("User " + st.getAccount().getUsername() + " is in the game.");
+                            player.send(st.getAccount().getWinLoss());
                         }
                     }
                     break;
 
-                case "ALL USERS HAVE JOINED":
+                case "ALL USERS HAVE JOINED": case "CONTINUE GAME":
                     nextPlayer(game, message, null);
                     break;
 
@@ -114,7 +113,7 @@ public class HangmanServer {
                     for (ServerThread player : game.getPlayers()) {
                         if (player != st) {
                             player.send(message);
-                            player.send(st.getUser().getUsername());
+                            player.send(st.getAccount().getUsername());
                             player.send(st.getGuess());
                         }
                     }
@@ -128,14 +127,14 @@ public class HangmanServer {
                     for (ServerThread player : game.getPlayers()) {
                         if (player != st) {
                             player.send("OPPONENT WIN - LETTER");
-                            player.send(st.getUser().getUsername());
+                            player.send(st.getAccount().getUsername());
                         } else {
                             player.send(message);
                         }
 
                         for (ServerThread s : game.getPlayers()) {
                             player.send("PLAYER RECORD");
-                            player.send(s.getUser().winLoss());
+                            player.send(s.getAccount().getWinLoss());
                         }
                         player.send("GAME EXIT");
                     }
@@ -145,14 +144,14 @@ public class HangmanServer {
                     for (ServerThread player : game.getPlayers()) {
                         if (player != st) {
                             player.send("OPPONENT WIN - WORD");
-                            player.send(st.getUser().getUsername());
+                            player.send(st.getAccount().getUsername());
                         } else {
                             player.send(message);
                         }
 
                         for (ServerThread s : game.getPlayers()) {
                             player.send("PLAYER RECORD");
-                            player.send(s.getUser().winLoss());
+                            player.send(s.getAccount().getWinLoss());
                         }
                         player.send("GAME EXIT");
                     }
@@ -162,7 +161,7 @@ public class HangmanServer {
                     for (ServerThread player : game.getPlayers()) {
                         if (player != st) {
                             player.send("OPPONENT LOSE");
-                            player.send(st.getUser().getUsername());
+                            player.send(st.getAccount().getUsername());
                         } else {
                             player.send(message);
                         }
@@ -176,14 +175,10 @@ public class HangmanServer {
 
                         for (ServerThread s : game.getPlayers()) {
                             player.send("PLAYER RECORD");
-                            player.send(s.getUser().winLoss());
+                            player.send(s.getAccount().getWinLoss());
                         }
                         player.send("GAME EXIT");
                     }
-                    break;
-
-                case "CONTINUE GAME":
-                    nextPlayer(game, message, null);
                     break;
             }
         }
@@ -201,12 +196,7 @@ public class HangmanServer {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         String filename = "";
-        String hostname = "";
-        String port = "";
-        String connection = "";
-        String DBUsername = "";
-        String DBPassword = "";
-        String SecretWordFile = "";
+        configFileProperties properties = null;
 
 
         boolean validFile = false;
@@ -215,18 +205,7 @@ public class HangmanServer {
             filename = scan.nextLine();
 
             try (InputStream is = new FileInputStream(filename);) {
-                Properties configFile = new Properties();
-                if (is != null) {
-                    configFile.load(is);
-                }
-
-                System.out.println("\nReading config file...");
-                hostname = configFile.getProperty("ServerHostname");
-                port = configFile.getProperty("ServerPort");
-                connection = configFile.getProperty("DBConnection");
-                DBUsername = configFile.getProperty("DBUsername");
-                DBPassword = configFile.getProperty("DBPassword");
-                SecretWordFile = configFile.getProperty("SecretWordFile");
+                properties = new configFileProperties(is);
                 validFile = true;
             } catch (FileNotFoundException exception) {
                 System.out.println("Configuration file " + filename + " could not be found.");
@@ -235,27 +214,11 @@ public class HangmanServer {
             }
         } while (!validFile);
 
-        boolean isValidFile = true;
-        isValidFile&=containsValue(hostname,"hostname");
-        isValidFile&=containsValue(port,"port");
-        isValidFile&=containsValue(connection, "connection");
-        isValidFile&=containsValue(DBUsername,"DBUsername");
-        isValidFile&=containsValue(DBPassword,"DBPassword");
-        isValidFile&=containsValue(SecretWordFile,"SecretWordFile");
-        if (isValidFile) {
-            System.out.println("Server Hostname - " + hostname);
-            System.out.println("Server Port - " + port);
-            System.out.println("Database Connection String - " + connection);
-            System.out.println("Database Username - " + DBUsername);
-            System.out.println("Database Password - " + DBPassword);
-            System.out.println("Secret Word File - " + SecretWordFile + "\n");
-        } else {
-            System.exit(-1);
-        }
+        validFile(properties, containsValue(properties.getHostname(), "hostname"), containsValue(properties.getPort(), "port"), containsValue(properties.getConnection(), "connection"), containsValue(properties.getDBUsername(), "DBUsername"), containsValue(properties.getDBPassword(), "DBPassword"), containsValue(properties.getSecretWordFile(), "SecretWordFile"));
 
         words = new ArrayList<String>();
         String word = "";
-        try (BufferedReader br = new BufferedReader(new FileReader(SecretWordFile))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(properties.getSecretWordFile()))) {
             word = br.readLine().trim();
             while (word != null) {
                 words.add(word);
@@ -270,13 +233,11 @@ public class HangmanServer {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             System.out.print("Trying to connect to database...");
-            conn = DriverManager.getConnection(connection, DBUsername, DBPassword);
+            conn = DriverManager.getConnection(properties.getConnection(), properties.getDBUsername(), properties.getDBPassword());
             System.out.println("Connected!\n");
-
-            new HangmanServer(Integer.parseInt(port), conn);
+            new HangmanServer(Integer.parseInt(properties.getPort()), conn);
         } catch (SQLException exception) {
-            System.out.println("Unable to connect to database " + connection +
-                    " with username " + DBUsername + " and password " + DBPassword + ".");
+            System.out.println("Unable to connect to database " + properties.getConnection() + " with username " + properties.getDBUsername() + " and password " + properties.getDBPassword() + ".");
         } catch (ClassNotFoundException exception) {
             System.out.println("Class Not Found Exception: " + exception.getMessage());
         } finally {
@@ -291,7 +252,27 @@ public class HangmanServer {
         scan.close();
     }
 
+    static void validFile(configFileProperties properties, boolean hostname, boolean port, boolean connection, boolean dbUsername, boolean dbPassword, boolean secretWordFile) {
+        boolean isValidFile = true;
 
+        isValidFile &= hostname;
+        isValidFile &= port;
+        isValidFile &= connection;
+        isValidFile &= dbUsername;
+        isValidFile &= dbPassword;
+        isValidFile &= secretWordFile;
+
+        if (isValidFile) {
+            System.out.println("Server Hostname - " + properties.getHostname());
+            System.out.println("Server Port - " + properties.getPort());
+            System.out.println("Database Connection String - " + properties.getConnection());
+            System.out.println("Database Username - " + properties.getDBUsername());
+            System.out.println("Database Password - " + properties.getDBPassword());
+            System.out.println("Secret Word File - " + properties.getSecretWordFile() + "\n");
+        } else {
+            System.exit(-1);
+        }
+    }
 
 
 }

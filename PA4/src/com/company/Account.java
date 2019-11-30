@@ -6,18 +6,18 @@ public class Account {
     private int wins;
     private int losses;
     private boolean lost;
-    private int userID;
+    private int accountID;
 
     public Account(){
         lost = false;
     }
 
-    public int getUserID(){
-        return userID;
+    public int getAccountID(){
+        return accountID;
     }
 
-    public void setUserID(int userID){
-        this.userID = userID;
+    public void setAccountID(int accountID){
+        this.accountID = accountID;
     }
 
     public String getUsername() {
@@ -56,7 +56,7 @@ public class Account {
         losses+=1;
     }
 
-    public String winLoss(){
+    public String getWinLoss(){
         return getUsername() + "'s Record\n--------------\nWins - " + wins + "\nLosses - " + losses;
     }
 
