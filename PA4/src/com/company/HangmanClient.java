@@ -33,164 +33,165 @@ public class HangmanClient extends Thread {
 
     public void run() {
         try {
-            boolean running = true;
-            while (running) {
-                String line = br.readLine();
+            breaklabel :
+            {
+                while (true) {
+                    String line = br.readLine();
 
-                if (line != null) {
-                    switch (line) {
-                        case "SUCCESSFULLY LOGGED IN":
-                            System.out.println("\nGreat! You are now logged in as " + this.username + ".\n");
-                            for (int i = 0; i < 4; i++) {
-                                System.out.println(br.readLine());
-                            }
-                            getGameOption();
-                            break;
+                    if (line != null) {
+                        switch (line) {
+                            case "SUCCESSFULLY LOGGED IN":
+                                System.out.println("\nGreat! You are now logged in as " + this.username + ".\n");
+                                for (int i = 0; i < 4; i++) {
+                                    System.out.println(br.readLine());
+                                }
+                                getGameOption();
+                                break;
 
-                        case "INCORRECT PASSWORD":
-                            System.out.println("The password you entered is incorrect. Please try again.");
-                            getUserLogin();
-                            break;
+                            case "INCORRECT PASSWORD":
+                                System.out.println("The password you entered is incorrect. Please try again.");
+                                getUserLogin();
+                                break;
 
-                        case "INVALID USER":
-                            System.out.println("\nNo account exists with those credentials.");
-                            System.out.print("Would you like to create a new account? ");
-                            String input = scanner.nextLine();
-                            if (input.toLowerCase().equals("yes") || input.toLowerCase().equals("y")) {
-                                System.out.print("Would you like to use the username and password above? ");
-                                input = scanner.nextLine();
-                                if (input.equalsIgnoreCase("yes") || input.equalsIgnoreCase("y")) {
-                                    pw.println("NEW ACCOUNT");
-                                    pw.println(this.username);
-                                    pw.println(this.password);
+                            case "INVALID USER":
+                                System.out.println("\nNo account exists with those credentials.");
+                                System.out.print("Would you like to create a new account? ");
+                                String input = scanner.nextLine();
+                                if (input.toLowerCase().equals("yes") || input.toLowerCase().equals("y")) {
+                                    System.out.print("Would you like to use the username and password above? ");
+                                    input = scanner.nextLine();
+                                    if (input.equalsIgnoreCase("yes") || input.equalsIgnoreCase("y")) {
+                                        pw.println("NEW ACCOUNT");
+                                        pw.println(this.username);
+                                        pw.println(this.password);
+                                    } else {
+                                        getUserLogin();
+                                    }
                                 } else {
                                     getUserLogin();
                                 }
-                            } else {
-                                getUserLogin();
-                            }
-                            break;
+                                break;
 
-                        case "START SUCCESSFUL":
-                            int numPlayers = getIntInput(null, "\nHow many users will be playing (1-4)? ", "A game can only have between 1-4 players.", 1, 4);
-                            pw.println("NUMBER OF PLAYERS");
-                            pw.println(numPlayers);
-                            break;
+                            case "START SUCCESSFUL":
+                                int numPlayers = getIntInput(null, "\nHow many users will be playing (1-4)? ", "A game can only have between 1-4 players.", 1, 4);
+                                pw.println("NUMBER OF PLAYERS");
+                                pw.println(numPlayers);
+                                break;
 
-                        case "START UNSUCCESSFUL - GAME ALREADY EXISTS":
-                            System.out.println("\n" + gameName + " already exists.");
-                            getGameOption();
-                            break;
+                            case "START UNSUCCESSFUL - GAME ALREADY EXISTS":
+                                System.out.println("\n" + gameName + " already exists.");
+                                getGameOption();
+                                break;
 
-                        case "JOIN SUCCESSFUL":
-                        case "USER JOINED":
-                            System.out.println("\n" + br.readLine() + "\n");
-                            for (int i = 0; i < 4; i++) {
-                                System.out.println(br.readLine());
-                            }
-                            break;
+                            case "JOIN SUCCESSFUL":
+                            case "USER JOINED":
+                                System.out.println("\n" + br.readLine() + "\n");
+                                for (int i = 0; i < 4; i++) {
+                                    System.out.println(br.readLine());
+                                }
+                                break;
 
-                        case "JOIN UNSUCCESSFUL - GAME DOES NOT EXIST":
-                            System.out.println("\nThere is no game with the name " + gameName + ".");
-                            getGameOption();
-                            break;
+                            case "JOIN UNSUCCESSFUL - GAME DOES NOT EXIST":
+                                System.out.println("\nThere is no game with the name " + gameName + ".");
+                                getGameOption();
+                                break;
 
-                        case "JOIN UNSUCCESSFUL - GAME IS FULL":
-                            System.out.println("\nThe game " + gameName + " does not have space for another user to join.");
-                            getGameOption();
-                            break;
+                            case "JOIN UNSUCCESSFUL - GAME IS FULL":
+                                System.out.println("\nThe game " + gameName + " does not have space for another user to join.");
+                                getGameOption();
+                                break;
 
-                        case "ALL USERS HAVE JOINED":
-                            System.out.println("\nAll users have joined.");
-                            System.out.println("\nDetermining secret word...");
-                            this.displayedWord = br.readLine();
-                            System.out.println("\nSecret Word " + displayedWord);
-                            break;
+                            case "ALL USERS HAVE JOINED":
+                                System.out.println("\nAll users have joined.");
+                                System.out.println("\nDetermining secret word...");
+                                this.displayedWord = br.readLine();
+                                System.out.println("\nSecret Word " + displayedWord);
+                                break;
 
-                        case "WAITING FOR USER(S) TO JOIN":
-                            System.out.println("\nWaiting for " + (br.read() - '0') + " other user(s) to join...");
-                            break;
+                            case "WAITING FOR USER(S) TO JOIN":
+                                System.out.println("\nWaiting for " + (br.read() - '0') + " other user(s) to join...");
+                                break;
 
-                        case "PLAYER TURN":
-                            getGuessOption(br.read() - '0');
-                            break;
+                            case "PLAYER TURN":
+                                getGuessOption(br.read() - '0');
+                                break;
 
-                        case "WAITING FOR OPPONENT":
-                            System.out.println("\nYou have " + (br.read() - '0') + " incorrect guesses remaining.");
-                            br.readLine();
-                            System.out.println("Waiting for " + br.readLine() + " to do something...");
-                            break;
+                            case "WAITING FOR OPPONENT":
+                                System.out.println("\nYou have " + (br.read() - '0') + " incorrect guesses remaining.");
+                                br.readLine();
+                                System.out.println("Waiting for " + br.readLine() + " to do something...");
+                                break;
 
-                        case "GUESS - LETTER":
-                            System.out.println("\n" + br.readLine() + " has guessed the letter '" + br.readLine() + "'.");
-                            break;
+                            case "GUESS - LETTER":
+                                System.out.println("\n" + br.readLine() + " has guessed the letter '" + br.readLine() + "'.");
+                                break;
 
-                        case "GUESS - WORD":
-                            System.out.println("\n" + br.readLine() + " has guessed the word '" + br.readLine() + "'.");
-                            break;
+                            case "GUESS - WORD":
+                                System.out.println("\n" + br.readLine() + " has guessed the word '" + br.readLine() + "'.");
+                                break;
 
-                        case "LETTER - CORRECT GUESS":
-                            System.out.println("\nThe letter '" + br.readLine() + "' is in the secret word.");
-                            this.displayedWord = br.readLine();
-                            System.out.println("\nSecret Word: " + displayedWord);
-                            break;
+                            case "LETTER - CORRECT GUESS":
+                                System.out.println("\nThe letter '" + br.readLine() + "' is in the secret word.");
+                                this.displayedWord = br.readLine();
+                                System.out.println("\nSecret Word: " + displayedWord);
+                                break;
 
-                        case "LETTER - INCORRECT GUESS":
-                            System.out.println("\nThe letter '" + br.readLine() + "' is not in the secret word.");
-                            this.displayedWord = br.readLine();
-                            System.out.println("\nSecret Word: " + displayedWord);
-                            break;
+                            case "LETTER - INCORRECT GUESS":
+                                System.out.println("\nThe letter '" + br.readLine() + "' is not in the secret word.");
+                                this.displayedWord = br.readLine();
+                                System.out.println("\nSecret Word: " + displayedWord);
+                                break;
 
-                        case "LAST LETTER GUESSED":
-                            System.out.println("\nYou guessed the last letter! You win!");
-                            break;
+                            case "LAST LETTER GUESSED":
+                                System.out.println("\nYou guessed the last letter! You win!");
+                                break;
 
-                        case "WORD - CORRECT GUESS":
-                            System.out.println("\nThat is correct! You win!");
-                            break;
+                            case "WORD - CORRECT GUESS":
+                                System.out.println("\nThat is correct! You win!");
+                                break;
 
-                        case "WORD - INCORRECT GUESS":
-                            System.out.println("\nThat is incorrect! You are out of the game!");
-                            break;
+                            case "WORD - INCORRECT GUESS":
+                                System.out.println("\nThat is incorrect! You are out of the game!");
+                                break;
 
-                        case "NO GUESSES REMAINING":
-                            System.out.println("\nNo guesses remaining. You lose!");
-                            System.out.println("The word was '" + br.readLine() + "'.");
-                            break;
+                            case "NO GUESSES REMAINING":
+                                System.out.println("\nNo guesses remaining. You lose!");
+                                System.out.println("The word was '" + br.readLine() + "'.");
+                                break;
 
-                        case "OPPONENT WIN - LETTER":
-                            System.out.println("\n" + br.readLine() + " guessed the last letter. You lose!");
-                            break;
+                            case "OPPONENT WIN - LETTER":
+                                System.out.println("\n" + br.readLine() + " guessed the last letter. You lose!");
+                                break;
 
-                        case "OPPONENT WIN - WORD":
-                            System.out.println("\n" + br.readLine() + " guessed the word correctly. You lose!");
-                            break;
+                            case "OPPONENT WIN - WORD":
+                                System.out.println("\n" + br.readLine() + " guessed the word correctly. You lose!");
+                                break;
 
-                        case "OPPONENT LOSE":
-                            System.out.println("\n" + br.readLine() + " guessed the word incorrectly and is out of the game.");
-                            break;
+                            case "OPPONENT LOSE":
+                                System.out.println("\n" + br.readLine() + " guessed the word incorrectly and is out of the game.");
+                                break;
 
-                        case "NO PLAYERS REMAINING":
-                            System.out.println("\nNo players remaining. You lose!");
-                            System.out.println("The word was '" + br.readLine() + "'.");
-                            break;
+                            case "NO PLAYERS REMAINING":
+                                System.out.println("\nNo players remaining. You lose!");
+                                System.out.println("The word was '" + br.readLine() + "'.");
+                                break;
 
-                        case "CONTINUE GAME":
-                            this.displayedWord = br.readLine();
-                            System.out.println("\nSecret Word " + displayedWord);
-                            break;
-                        case "PLAYER RECORD":
-                            for (int i = 0; i < 4; i++) {
-                                System.out.print("\n" + br.readLine());
-                                if (i == 3)
-                                    System.out.print("\n");
-                            }
-                            break;
+                            case "CONTINUE GAME":
+                                this.displayedWord = br.readLine();
+                                System.out.println("\nSecret Word " + displayedWord);
+                                break;
+                            case "PLAYER RECORD":
+                                for (int i = 0; i < 4; i++) {
+                                    System.out.print("\n" + br.readLine());
+                                    if (i == 3)
+                                        System.out.print("\n");
+                                }
+                                break;
 
-                        case "GAME EXIT":
-                            System.out.println("\nThank you for playing Hangman!");
-                            running = false;
-                            break;
+                            case "GAME EXIT":
+                                System.out.println("\nThank you for playing Hangman!");
+                                break breaklabel;
+                        }
                     }
                 }
             }

@@ -17,6 +17,7 @@ public class ServerThread extends Thread {
 
     private BufferedReader br;
     private PrintWriter pw;
+
     private HangmanServer server;
     private Connection conn;
     private PreparedStatement ps;
@@ -26,12 +27,14 @@ public class ServerThread extends Thread {
     private HangmanGame game;
     private String guess;
 
+
     public ServerThread(Socket s, HangmanServer server, Connection conn) {
         try {
             this.server = server;
             this.conn = conn;
             pw = new PrintWriter(s.getOutputStream());
             br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+
             this.start();
         } catch (IOException ioe) {
             System.out.println("ioe in ServerThread constructor: " + ioe.getMessage());
@@ -82,7 +85,7 @@ public class ServerThread extends Thread {
                             account.setPassword(br.readLine());
                             System.out.println(timestamp + " " + account.getUsername() + " - created an account with password " + account.getPassword() + ".");
 
-                            ps = conn.prepareStatement("INSERT INTO Account(username, password, wins, losses) VALUES (?,?,?,?)");
+                            ps = conn.prepareStatement("INSERT INTO Account(username, password, numWins, numLosses) VALUES (?,?,?,?)");
                             ps.setString(1, account.getUsername());
                             ps.setString(2, account.getPassword());
                             ps.setInt(3, 0);
@@ -270,9 +273,6 @@ public class ServerThread extends Thread {
                                     }
                                 }
                             }
-                            break;
-
-                        default:
                             break;
                     }
                 }

@@ -16,8 +16,7 @@ public class HangmanServer {
     private static List<String> words;
 
     public HangmanServer(int port, Connection conn) {
-        try {
-            ServerSocket ss = new ServerSocket(port);
+        try(ServerSocket ss = new ServerSocket(port)) {
             serverThreadVector = new Vector<ServerThread>();
             games = new ConcurrentHashMap<String, HangmanGame>();
             while (true) {

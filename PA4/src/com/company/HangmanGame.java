@@ -31,6 +31,11 @@ public class HangmanGame {
         return players;
     }
 
+    public int getNumGuesses(){
+        return guesses;
+    }
+
+
 
 
     public String getName() {
