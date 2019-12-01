@@ -1,7 +1,4 @@
-package com.company;//package com.company;//package com.company;
-import com.company.Account;
-import com.company.HangmanGame;
-import com.company.HangmanServer;
+package com.company;
 
 import java.io.BufferedReader;
 import java.io.IOException;
