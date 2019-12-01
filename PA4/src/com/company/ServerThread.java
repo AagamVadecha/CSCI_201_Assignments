@@ -1,5 +1,4 @@
 package com.company;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -114,12 +113,16 @@ public class ServerThread extends Thread {
 
                         case "NUMBER OF PLAYERS":
                             System.out.println(timestamp + " " + account.getUsername() + " - successfully started game " + game.getName() + ".");
-                            game.addPlayer(this);
                             game.setNumPlayers(br.read() - '0');
+                            game.addPlayer(this);
                             server.gameStart(game.getName(), game);
 
                             System.out.println(timestamp + " " + account.getUsername() + " - " + game.getName() + " needs " + game.getNumPlayers() + " to start game.");
-                            userJoin(timestamp);
+                            if (game.getPlayers().size() == game.getNumPlayers()) {
+                                waitForUsers(timestamp);
+                            } else {
+                                server.notify("WAITING FOR USER(S) TO JOIN", game.getName(), this);
+                            }
                             break;
 
                         case "JOIN GAME":
@@ -133,7 +136,11 @@ public class ServerThread extends Thread {
                                     account.setAccountID(game.getPlayers().size() - 1);
                                     server.notify("JOIN SUCCESSFUL", game.getName(), this);
 
-                                    userJoin(timestamp);
+                                    if (game.getPlayers().size() == game.getNumPlayers()) {
+                                        waitForUsers(timestamp);
+                                    } else {
+                                        server.notify("WAITING FOR USER(S) TO JOIN", game.getName(), this);
+                                    }
                                 } else {
                                     System.out.println(timestamp + " " + account.getUsername() + " - " + name + " exists, but " +
                                             account.getUsername() + " unable to join because maximum number of players have already joined " + name + ".");
@@ -167,9 +174,9 @@ public class ServerThread extends Thread {
                                         ". Secret word now shows " + game.getGuessedWord() + ".");
 
                                 if (!game.getGuessedWord().contains("_")) {
-                                    String losers = updateAllAccounts();
+                                    String opponents = updateAccounts();
                                     System.out.println(timestamp + " " + account.getUsername() + " - guessed the last letter and wins the game. " +
-                                            losers + "have lost the game.");
+                                            opponents + "have lost the game.");
                                     server.notify("LAST LETTER GUESSED", game.getName(), this);
                                     server.removeGame(game.getName());
                                 } else {
@@ -182,15 +189,7 @@ public class ServerThread extends Thread {
 
                                 if (game.getNumGuesses() == 0) {
                                     System.out.println(timestamp + " " + account.getUsername() + " - no guesses remaining. All players have lost the game.");
-                                    for (ServerThread player : game.getPlayers()) {
-                                        Account account = player.getAccount();
-                                        account.setLosses(account.getLosses() + 1);
-
-                                        ps = conn.prepareStatement("UPDATE Account SET numLosses = ? WHERE username = ?");
-                                        ps.setInt(1, account.getLosses());
-                                        ps.setString(2, account.getUsername());
-                                        ps.executeUpdate();
-                                    }
+                                    updateAccount();
                                     server.notify("NO GUESSES REMAINING", game.getName(), this);
                                     server.removeGame(game.getName());
                                 } else {
@@ -205,9 +204,9 @@ public class ServerThread extends Thread {
                             server.notify(line, game.getName(), this);
 
                             if (guess.toLowerCase().equals(game.getSecretWord().toLowerCase())) {
-                                String otherAccounts = updateAllAccounts();
+                                String temp = updateAccounts();
                                 System.out.println(timestamp + " " + account.getUsername() + " - '" + guess + "' is correct. " +
-                                        account.getUsername() + " wins the game. " + otherAccounts + "have lost the game.");
+                                        account.getUsername() + " wins the game. " + temp + "have lost the game.");
                                 server.notify("WORD - CORRECT GUESS", game.getName(), this);
                                 server.removeGame(game.getName());
                             } else {
@@ -219,7 +218,7 @@ public class ServerThread extends Thread {
 
                                 if (game.getNumGuesses() == 0) {
                                     System.out.println(timestamp + " " + account.getUsername() + " - no guesses remaining. All players have lost the game.");
-                                    updateLosses();
+                                    updateAccount();
                                     server.notify("NO GUESSES REMAINING", game.getName(), this);
                                     server.removeGame(game.getName());
                                 } else {
@@ -232,7 +231,7 @@ public class ServerThread extends Thread {
 
                                     if (gameOver) {
                                         System.out.println(timestamp + " " + account.getUsername() + " - no players remaining. All players have lost the game.");
-                                        updateLosses();
+                                        updateAccount();
                                         server.notify("NO PLAYERS REMAINING", game.getName(), this);
                                         server.removeGame(game.getName());
                                     } else {
@@ -250,44 +249,7 @@ public class ServerThread extends Thread {
         }
     }
 
-    private String updateAllAccounts() throws SQLException {
-        String losers = "";
-        for(int x=0; x < game.getPlayers().size(); x++){
-            ServerThread player = game.getPlayers().get(x);
-            if (player == this) {
-                account.setWins(account.getWins() + 1);
-                ps = conn.prepareStatement("UPDATE Account SET numWins = ? WHERE username = ?");
-                ps.setInt(1, account.getWins());
-                ps.setString(2, account.getUsername());
-                ps.executeUpdate();
-            } else {
-                Account opponent = player.getAccount();
-                opponent.setLosses(opponent.getLosses() + 1);
-                ps = conn.prepareStatement("UPDATE Account SET numLosses = ? WHERE username = ?");
-                ps.setInt(1, opponent.getLosses());
-                ps.setString(2, opponent.getUsername());
-                ps.executeUpdate();
-
-                losers += opponent.getUsername() + " ";
-            }
-        }
-
-        return losers;
-    }
-
-    private void userJoin(String timestamp) {
-        if (game.getPlayers().size() == game.getNumPlayers()) {
-            System.out.println(timestamp + " " + account.getUsername() + " - " + game.getName() + " has " + game.getNumPlayers() + " player(s) so starting game. " +
-                    "Secret word is " + game.getSecretWord() + ".");
-            game.setGuessedWord(new String(new char[game.getSecretWord().length()]).replace("\0", "_ "));
-
-            server.notify("ALL USERS HAVE JOINED", game.getName(), this);
-        } else {
-            server.notify("WAITING FOR USER(S) TO JOIN", game.getName(), this);
-        }
-    }
-
-    private void updateLosses() throws SQLException {
+    private void updateAccount() throws SQLException {
         for (ServerThread player : game.getPlayers()) {
             Account account = player.getAccount();
             account.setLosses(account.getLosses() + 1);
@@ -297,6 +259,38 @@ public class ServerThread extends Thread {
             ps.setString(2, account.getUsername());
             ps.executeUpdate();
         }
+    }
+    private String updateAccounts() throws SQLException {
+        String opponents = "";
+        for (ServerThread player : game.getPlayers()) {
+            if (player == this) {
+                account.setWins(account.getWins() + 1);
+
+                ps = conn.prepareStatement("UPDATE Account SET numWins = ? WHERE username = ?");
+                ps.setInt(1, account.getWins());
+                ps.setString(2, account.getUsername());
+                ps.executeUpdate();
+            } else {
+                Account opponent = player.getAccount();
+                opponent.setLosses(opponent.getLosses() + 1);
+
+                ps = conn.prepareStatement("UPDATE Account SET numLosses = ? WHERE username = ?");
+                ps.setInt(1, opponent.getLosses());
+                ps.setString(2, opponent.getUsername());
+                ps.executeUpdate();
+
+                opponents += opponent.getUsername() + " ";
+            }
+        }
+        return opponents;
+    }
+
+    private void waitForUsers(String timestamp) {
+        System.out.println(timestamp + " " + account.getUsername() + " - " + game.getName() + " has " + game.getNumPlayers() + " player(s) so starting game. " +
+                "Secret word is " + game.getSecretWord() + ".");
+        game.setGuessedWord(new String(new char[game.getSecretWord().length()]).replace("\0", "_ "));
+
+        server.notify("ALL USERS HAVE JOINED", game.getName(), this);
     }
 
     public String getGuess() {

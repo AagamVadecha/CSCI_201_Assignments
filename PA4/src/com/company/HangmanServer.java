@@ -243,8 +243,8 @@ public class HangmanServer {
             new HangmanServer(Integer.parseInt(properties.getPort()), conn);
         } catch (SQLException exception) {
             System.out.println("Unable to connect to database " + properties.getConnection() + " with username " + properties.getDBUsername() + " and password " + properties.getDBPassword() + ".");
-        } catch (ClassNotFoundException exception) {
-            System.out.println("Class Not Found Exception: " + exception.getMessage());
+        } catch (Exception exception) {
+            System.out.println("Exception occurred");
         } finally {
             try {
                 if (conn != null) {

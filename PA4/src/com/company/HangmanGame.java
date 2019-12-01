@@ -43,10 +43,10 @@ public class HangmanGame {
     }
 
     public boolean addPlayer(ServerThread server){
-        if(players.size() == numPlayers)
+        if(players.size() == numPlayers){
             return false;
+        }
         players.add(server);
-        validPlayers.add(server);
         return true;
     }
 
