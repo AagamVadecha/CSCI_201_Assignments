@@ -57,7 +57,7 @@ public class Account {
     }
 
     public String getWinLoss(){
-        return getUsername() + "'s Record\n--------------\nWins - " + wins + "\nLosses - " + losses;
+        return getUsername() + "'s Record\n--------\nWins - " + wins + "\nLosses - " + losses;
     }
 
     public boolean hasLost(){

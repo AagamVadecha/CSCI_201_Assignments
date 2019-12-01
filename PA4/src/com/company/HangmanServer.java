@@ -9,9 +9,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-
+//
 public class HangmanServer {
-    private ConcurrentHashMap<String, HangmanGame> games;
+
+        private ConcurrentHashMap<String, HangmanGame> games;
     private Vector<ServerThread> serverThreadVector;
     private static List<String> words;
 
@@ -21,7 +22,7 @@ public class HangmanServer {
             games = new ConcurrentHashMap<String, HangmanGame>();
             while (true) {
                 Socket s = ss.accept();
-                ServerThread st = new ServerThread(s, this, conn);
+                ServerThread st = new ServerThread(this, s, conn);
                 serverThreadVector.add(st);
             }
         } catch (Exception e) {
@@ -37,7 +38,7 @@ public class HangmanServer {
     public void removeGame(String name) {
         games.remove(name.toLowerCase());
     }
-        public HangmanGame getGame(String name) {
+    public HangmanGame getGame(String name) {
         return games.get(name.toLowerCase());
     }
 
@@ -51,7 +52,12 @@ public class HangmanServer {
         else{
             HangmanGame game = games.get(name.toLowerCase());
             synchronized(game){
-                return game.addPlayer(thread);
+                if (game.getPlayers().size() < game.getNumPlayers()) {
+                    game.addPlayer(thread);
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
     }
@@ -272,6 +278,6 @@ public class HangmanServer {
             System.exit(-1);
         }
     }
-
-
 }
+
+
