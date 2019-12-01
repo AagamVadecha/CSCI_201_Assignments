@@ -15,10 +15,9 @@ public class HangmanClient extends Thread {
     private String displayedWord;
 
     public HangmanClient(String name, int port) {
-        Socket s = null;
         try {
             System.out.print("Trying to connect to server...");
-            s = new Socket(name, port);
+            Socket s = new Socket(name, port);
             System.out.println("Connected!");
 
             pw = new PrintWriter(s.getOutputStream(), true);
@@ -33,7 +32,7 @@ public class HangmanClient extends Thread {
 
     public void run() {
         try {
-            breaklabel :
+            breakLabel :
             {
                 while (true) {
                     String line = br.readLine();
@@ -190,7 +189,7 @@ public class HangmanClient extends Thread {
 
                             case "GAME EXIT":
                                 System.out.println("\nThank you for playing Hangman!");
-                                break breaklabel;
+                                break breakLabel;
                         }
                     }
                 }
@@ -219,11 +218,10 @@ public class HangmanClient extends Thread {
 
         if (input == 1) {
             pw.println("START GAME");
-            pw.println(gameName);
         } else {
             pw.println("JOIN GAME");
-            pw.println(gameName);
         }
+        pw.println(gameName);
     }
 
     public void getGuessOption(int num) {
@@ -251,7 +249,8 @@ public class HangmanClient extends Thread {
     }
 
     public static int getIntInput(String display, String prompt, String error, int min, int max) {
-        int num = 0;
+        int num;
+        boolean goneThrough;
         do {
             if (display != null) {
                 System.out.println(display);
@@ -265,17 +264,20 @@ public class HangmanClient extends Thread {
                 System.out.print(prompt);
                 scanner.nextLine();
             }
+            goneThrough = true;
             num = scanner.nextInt();
             scanner.nextLine();
             if (num < min || num > max) {
                 System.out.println("\n" + error);
+                goneThrough=false;
             }
-        } while (num < min || num > max);
+        } while (!goneThrough);
         return num;
     }
 
     public static String getCharInput(String prompt, String error, String word) {
-        String str = "";
+        String str;
+        boolean goneThrough;
         do {
             System.out.print(prompt);
             while (!scanner.hasNext()) {
@@ -283,21 +285,18 @@ public class HangmanClient extends Thread {
                 System.out.print(prompt);
                 scanner.nextLine();
             }
+            goneThrough = true;
             str = scanner.nextLine().trim();
-            if (str.length() != 1) {
+            if (str.length() != 1 || word.toLowerCase().contains(str.toLowerCase()) ||!(Character.isLetter(str.charAt(0)))) {
                 System.out.println("\n" + error);
-            } else if (word.toLowerCase().indexOf(str.toLowerCase()) != -1) {
-                System.out.println("\n" + error);
-            } else if (!(str.charAt(0) >= 'a' && str.charAt(0) <= 'z') && !(str.charAt(0) >= 'A' && str.charAt(0) <= 'Z')) {
-                System.out.println("\n" + error);
+                goneThrough = false;
             }
-        } while (str.length() != 1 || word.toLowerCase().indexOf(str.toLowerCase()) != -1 ||
-                (!(str.charAt(0) >= 'a' && str.charAt(0) <= 'z') && !(str.charAt(0) >= 'A' && str.charAt(0) <= 'Z')));
+        } while (!goneThrough);
         return str;
     }
 
     public static boolean containsValue(String string, String name) {
-        if (string == null || string == "") {
+        if (string == null || string.equals("")) {
             System.out.println(name + " is a required parameter in the configuration file.");
             return false;
         }
@@ -307,7 +306,7 @@ public class HangmanClient extends Thread {
 
     public static void main(String[] args) {
         scanner = new Scanner(System.in);
-        String filename = "";
+        String filename;
         configFileProperties properties = null;
         boolean validFile = false;
         do {

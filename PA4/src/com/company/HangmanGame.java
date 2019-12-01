@@ -14,7 +14,7 @@ public class HangmanGame {
 
     public HangmanGame(String name){
         this.name = name;
-        players = new Vector<ServerThread>();
+        players = new Vector<>();
         guesses = 7;
         turn = 0;
     }
@@ -85,8 +85,7 @@ public class HangmanGame {
         this.turn = ((this.turn+1)% players.size());
     }
 
-    public String replace(String letter, int index) {
+    public void replace(String letter, int index) {
         this.guessedWord=guessedWord.substring(0, index * 2) + letter.toUpperCase() + guessedWord.substring(index * 2 + 1);
-        return guessedWord;
     }
 }

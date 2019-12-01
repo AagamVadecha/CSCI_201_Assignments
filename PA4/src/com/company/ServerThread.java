@@ -161,16 +161,16 @@ public class ServerThread extends Thread {
                             int index = game.getSecretWord().indexOf(guess.toLowerCase());
                             if (index != -1) {
                                 game.replace(guess, index);
-                                String positions = String.valueOf(index);
+                                StringBuilder positions = new StringBuilder(String.valueOf(index));
                                 while (index != -1) {
                                     index = game.getSecretWord().indexOf(guess, index + 1);
                                     if (index != -1) {
                                         game.replace(guess, index);
-                                        positions += ", " + index;
+                                        positions.append(", ").append(index);
                                     }
                                 }
 
-                                System.out.println(timestamp + " " + account.getUsername() + " - '" + guess + "' is in '" + game.getSecretWord() + "' in position(s) " + positions +
+                                System.out.println(timestamp + " " + account.getUsername() + " - '" + guess + "' is in '" + game.getSecretWord() + "' in position(s) " + positions.toString() +
                                         ". Secret word now shows " + game.getGuessedWord() + ".");
 
                                 if (!game.getGuessedWord().contains("_")) {
@@ -261,7 +261,7 @@ public class ServerThread extends Thread {
         }
     }
     private String updateAccounts() throws SQLException {
-        String opponents = "";
+        StringBuilder opponents = new StringBuilder();
         for (ServerThread player : game.getPlayers()) {
             if (player == this) {
                 account.setWins(account.getWins() + 1);
@@ -279,16 +279,16 @@ public class ServerThread extends Thread {
                 ps.setString(2, opponent.getUsername());
                 ps.executeUpdate();
 
-                opponents += opponent.getUsername() + " ";
+                opponents.append(opponent.getUsername()).append(" ");
             }
         }
-        return opponents;
+        return opponents.toString();
     }
 
     private void waitForUsers(String timestamp) {
         System.out.println(timestamp + " " + account.getUsername() + " - " + game.getName() + " has " + game.getNumPlayers() + " player(s) so starting game. " +
                 "Secret word is " + game.getSecretWord() + ".");
-        game.setGuessedWord(new String(new char[game.getSecretWord().length()]).replace("\0", "_ "));
+        game.setGuessedWord(game.getSecretWord().replaceAll("[A-Za-z]", "_ "));
 
         server.notify("ALL USERS HAVE JOINED", game.getName(), this);
     }
@@ -297,11 +297,11 @@ public class ServerThread extends Thread {
         return guess;
     }
 
-    public void send(String message) {
+    public void message(String message) {
         pw.println(message);
     }
 
-    public void send(int num) {
+    public void message(int num) {
         pw.println(num);
     }
 

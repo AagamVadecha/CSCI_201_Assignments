@@ -9,17 +9,17 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-//
+
 public class HangmanServer {
 
-        private ConcurrentHashMap<String, HangmanGame> games;
+    private ConcurrentHashMap<String, HangmanGame> games;
     private Vector<ServerThread> serverThreadVector;
     private static List<String> words;
 
     public HangmanServer(int port, Connection conn) {
         try(ServerSocket ss = new ServerSocket(port)) {
-            serverThreadVector = new Vector<ServerThread>();
-            games = new ConcurrentHashMap<String, HangmanGame>();
+            serverThreadVector = new Vector<>();
+            games = new ConcurrentHashMap<>();
             while (true) {
                 Socket s = ss.accept();
                 ServerThread st = new ServerThread(this, s, conn);
@@ -52,12 +52,7 @@ public class HangmanServer {
         else{
             HangmanGame game = games.get(name.toLowerCase());
             synchronized(game){
-                if (game.getPlayers().size() < game.getNumPlayers()) {
-                    game.addPlayer(thread);
-                    return true;
-                } else {
-                    return false;
-                }
+                return game.addPlayer(thread);
             }
         }
     }
@@ -65,21 +60,21 @@ public class HangmanServer {
     public void nextPlayer(HangmanGame game, String message, String guess) {
         for (ServerThread player : game.getPlayers()) {
             int playerID = player.getAccount().getAccountID();
-            player.send(message);
+            player.message(message);
             if (guess != null) {
-                player.send(guess);
+                player.message(guess);
             }
-            player.send(game.getGuessedWord());
+            player.message(game.getGuessedWord());
             while (game.getPlayers().get(game.getTurn()).getAccount().hasLost()) {
                 game.nextTurn();
             }
             if (playerID == game.getTurn()) {
-                player.send("PLAYER TURN");
-                player.send(game.getGuesses());
+                player.message("PLAYER TURN");
+                player.message(game.getGuesses());
             } else {
-                player.send("WAITING FOR OPPONENT");
-                player.send(game.getGuesses());
-                player.send(game.getPlayers().get(game.getTurn()).getAccount().getUsername());
+                player.message("WAITING FOR OPPONENT");
+                player.message(game.getGuesses());
+                player.message(game.getPlayers().get(game.getTurn()).getAccount().getUsername());
             }
         }
         game.nextTurn();
@@ -92,13 +87,13 @@ public class HangmanServer {
                 case "JOIN SUCCESSFUL":
                     for (ServerThread player : game.getPlayers()) {
                         if (player != st) {
-                            st.send(message);
-                            st.send("User " + player.getAccount().getUsername() + " is in the game.");
-                            st.send(player.getAccount().getWinLoss());
+                            st.message(message);
+                            st.message("User " + player.getAccount().getUsername() + " is in the game.");
+                            st.message(player.getAccount().getWinLoss());
 
-                            player.send("USER JOINED");
-                            player.send("User " + st.getAccount().getUsername() + " is in the game.");
-                            player.send(st.getAccount().getWinLoss());
+                            player.message("USER JOINED");
+                            player.message("User " + st.getAccount().getUsername() + " is in the game.");
+                            player.message(st.getAccount().getWinLoss());
                         }
                     }
                     break;
@@ -109,17 +104,17 @@ public class HangmanServer {
 
                 case "WAITING FOR USER(S) TO JOIN":
                     for (ServerThread player : game.getPlayers()) {
-                        player.send(message);
-                        player.send(game.getNumPlayers() - game.getPlayers().size());
+                        player.message(message);
+                        player.message(game.getNumPlayers() - game.getPlayers().size());
                     }
                     break;
 
                 case "GUESS - LETTER": case "GUESS - WORD":
                     for (ServerThread player : game.getPlayers()) {
                         if (player != st) {
-                            player.send(message);
-                            player.send(st.getAccount().getUsername());
-                            player.send(st.getGuess());
+                            player.message(message);
+                            player.message(st.getAccount().getUsername());
+                            player.message(st.getGuess());
                         }
                     }
                     break;
@@ -131,58 +126,58 @@ public class HangmanServer {
                 case "LAST LETTER GUESSED":
                     for (ServerThread player : game.getPlayers()) {
                         if (player != st) {
-                            player.send("OPPONENT WIN - LETTER");
-                            player.send(st.getAccount().getUsername());
+                            player.message("OPPONENT WIN - LETTER");
+                            player.message(st.getAccount().getUsername());
                         } else {
-                            player.send(message);
+                            player.message(message);
                         }
 
                         for (ServerThread s : game.getPlayers()) {
-                            player.send("PLAYER RECORD");
-                            player.send(s.getAccount().getWinLoss());
+                            player.message("PLAYER RECORD");
+                            player.message(s.getAccount().getWinLoss());
                         }
-                        player.send("GAME EXIT");
+                        player.message("GAME EXIT");
                     }
                     break;
 
                 case "WORD - CORRECT GUESS":
                     for (ServerThread player : game.getPlayers()) {
                         if (player != st) {
-                            player.send("OPPONENT WIN - WORD");
-                            player.send(st.getAccount().getUsername());
+                            player.message("OPPONENT WIN - WORD");
+                            player.message(st.getAccount().getUsername());
                         } else {
-                            player.send(message);
+                            player.message(message);
                         }
 
                         for (ServerThread s : game.getPlayers()) {
-                            player.send("PLAYER RECORD");
-                            player.send(s.getAccount().getWinLoss());
+                            player.message("PLAYER RECORD");
+                            player.message(s.getAccount().getWinLoss());
                         }
-                        player.send("GAME EXIT");
+                        player.message("GAME EXIT");
                     }
                     break;
 
                 case "WORD - INCORRECT GUESS":
                     for (ServerThread player : game.getPlayers()) {
                         if (player != st) {
-                            player.send("OPPONENT LOSE");
-                            player.send(st.getAccount().getUsername());
+                            player.message("OPPONENT LOSE");
+                            player.message(st.getAccount().getUsername());
                         } else {
-                            player.send(message);
+                            player.message(message);
                         }
                     }
                     break;
 
                 case "NO GUESSES REMAINING": case "NO PLAYERS REMAINING":
                     for (ServerThread player : game.getPlayers()) {
-                        player.send(message);
-                        player.send(game.getSecretWord());
+                        player.message(message);
+                        player.message(game.getSecretWord());
 
                         for (ServerThread s : game.getPlayers()) {
-                            player.send("PLAYER RECORD");
-                            player.send(s.getAccount().getWinLoss());
+                            player.message("PLAYER RECORD");
+                            player.message(s.getAccount().getWinLoss());
                         }
-                        player.send("GAME EXIT");
+                        player.message("GAME EXIT");
                     }
                     break;
             }
@@ -191,7 +186,7 @@ public class HangmanServer {
 
 
     public static boolean containsValue(String string, String name) {
-        if(string == null || string == ""){
+        if(string == null || string.equals("")){
             System.out.println(name + " is a required parameter in the configuration file.");
             return false;
         }
@@ -200,7 +195,7 @@ public class HangmanServer {
 
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
-        String filename = "";
+        String filename;
         configFileProperties properties = null;
 
 
@@ -209,7 +204,7 @@ public class HangmanServer {
             System.out.print("What is the name of the configuration file? ");
             filename = scan.nextLine();
 
-            try (InputStream is = new FileInputStream(filename);) {
+            try (InputStream is = new FileInputStream(filename)) {
                 properties = new configFileProperties(is);
                 validFile = true;
             } catch (FileNotFoundException exception) {
@@ -221,8 +216,8 @@ public class HangmanServer {
 
         validFile(properties, containsValue(properties.getHostname(), "hostname"), containsValue(properties.getPort(), "port"), containsValue(properties.getConnection(), "connection"), containsValue(properties.getDBUsername(), "DBUsername"), containsValue(properties.getDBPassword(), "DBPassword"), containsValue(properties.getSecretWordFile(), "SecretWordFile"));
 
-        words = new ArrayList<String>();
-        String word = "";
+        words = new ArrayList<>();
+        String word;
         try (BufferedReader br = new BufferedReader(new FileReader(properties.getSecretWordFile()))) {
             word = br.readLine().trim();
             while (word != null) {
@@ -258,9 +253,8 @@ public class HangmanServer {
     }
 
     static void validFile(configFileProperties properties, boolean hostname, boolean port, boolean connection, boolean dbUsername, boolean dbPassword, boolean secretWordFile) {
-        boolean isValidFile = true;
 
-        isValidFile &= hostname;
+        boolean isValidFile = hostname;
         isValidFile &= port;
         isValidFile &= connection;
         isValidFile &= dbUsername;
