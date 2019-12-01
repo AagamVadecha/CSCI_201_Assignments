@@ -225,15 +225,30 @@ public class HangmanClient extends Thread {
     }
 
     public void getGuessOption(int num) {
-        int input = getIntInput(displayGuessOptions(num), "What would you like to do? ", "That is not a valid option.", 1, 2);
+        int input = getIntInput(displayNumGuessOptions(num), "What would you like to do? ", "That is not a valid option.", 1, 2);
 
         if (input == 1) {
-            String guess = getCharInput("\nLetter to guess - ", "That is not a valid guess.", displayedWord);
+            String guess;
+            boolean goneThrough;
+            do {
+                System.out.print("\nLetter to guess - ");
+                while (!scanner.hasNext()) {
+                    System.out.println("\n" + "That is not a valid guess.");
+                    System.out.print("\nLetter to guess - ");
+                    scanner.nextLine();
+                }
+                goneThrough = true;
+                guess = scanner.nextLine().trim();
+                if (guess.length() != 1 || displayedWord.toLowerCase().contains(guess.toLowerCase()) ||!(Character.isLetter(guess.charAt(0)))) {
+                    System.out.println("\n" + displayedWord);
+                    goneThrough = false;
+                }
+            } while (!goneThrough);
             pw.println("GUESS - LETTER");
             pw.println(guess);
         } else {
             System.out.print("\nWhat is the secret word? ");
-            String guess = scanner.nextLine();
+            String guess = scanner.nextLine().trim();
             pw.println("GUESS - WORD");
             pw.println(guess);
         }
@@ -244,7 +259,7 @@ public class HangmanClient extends Thread {
         return "\n    1) Start a Game\n    2) Join a Game\n";
     }
 
-    public static String displayGuessOptions(int num) {
+    public static String displayNumGuessOptions(int num) {
         return "\nYou have " + num + " incorrect guesses remaining.\n\t1) Guess a letter.\n\t2) Guess the word.\n";
     }
 
@@ -274,26 +289,26 @@ public class HangmanClient extends Thread {
         } while (!goneThrough);
         return num;
     }
-
-    public static String getCharInput(String prompt, String error, String word) {
-        String str;
-        boolean goneThrough;
-        do {
-            System.out.print(prompt);
-            while (!scanner.hasNext()) {
-                System.out.println("\n" + error);
-                System.out.print(prompt);
-                scanner.nextLine();
-            }
-            goneThrough = true;
-            str = scanner.nextLine().trim();
-            if (str.length() != 1 || word.toLowerCase().contains(str.toLowerCase()) ||!(Character.isLetter(str.charAt(0)))) {
-                System.out.println("\n" + error);
-                goneThrough = false;
-            }
-        } while (!goneThrough);
-        return str;
-    }
+//
+//    public static String getCharInput(String prompt, String error, String word) {
+//        String str;
+//        boolean goneThrough;
+//        do {
+//            System.out.print(prompt);
+//            while (!scanner.hasNext()) {
+//                System.out.println("\n" + error);
+//                System.out.print(prompt);
+//                scanner.nextLine();
+//            }
+//            goneThrough = true;
+//            str = scanner.nextLine().trim();
+//            if (str.length() != 1 || word.toLowerCase().contains(str.toLowerCase()) ||!(Character.isLetter(str.charAt(0)))) {
+//                System.out.println("\n" + error);
+//                goneThrough = false;
+//            }
+//        } while (!goneThrough);
+//        return str;
+//    }
 
     public static boolean containsValue(String string, String name) {
         if (string == null || string.equals("")) {

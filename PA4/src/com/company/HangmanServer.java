@@ -14,7 +14,7 @@ public class HangmanServer {
 
     private ConcurrentHashMap<String, HangmanGame> games;
     private Vector<ServerThread> serverThreadVector;
-    private static List<String> words;
+    private static ArrayList<String> words;
 
     public HangmanServer(int port, Connection conn) {
         try(ServerSocket ss = new ServerSocket(port)) {
@@ -84,6 +84,11 @@ public class HangmanServer {
         if (message != null) {
             HangmanGame game = games.get(name.toLowerCase());
             switch(message) {
+
+                case "ALL USERS HAVE JOINED": case "CONTINUE GAME":
+                    nextPlayer(game, message, null);
+                    break;
+
                 case "JOIN SUCCESSFUL":
                     for (ServerThread player : game.getPlayers()) {
                         if (player != st) {
@@ -98,29 +103,11 @@ public class HangmanServer {
                     }
                     break;
 
-                case "ALL USERS HAVE JOINED": case "CONTINUE GAME":
-                    nextPlayer(game, message, null);
-                    break;
-
                 case "WAITING FOR USER(S) TO JOIN":
                     for (ServerThread player : game.getPlayers()) {
                         player.message(message);
                         player.message(game.getNumPlayers() - game.getPlayers().size());
                     }
-                    break;
-
-                case "GUESS - LETTER": case "GUESS - WORD":
-                    for (ServerThread player : game.getPlayers()) {
-                        if (player != st) {
-                            player.message(message);
-                            player.message(st.getAccount().getUsername());
-                            player.message(st.getGuess());
-                        }
-                    }
-                    break;
-
-                case "LETTER - CORRECT GUESS": case "LETTER - INCORRECT GUESS":
-                    nextPlayer(game, message, st.getGuess());
                     break;
 
                 case "LAST LETTER GUESSED":
@@ -138,6 +125,20 @@ public class HangmanServer {
                         }
                         player.message("GAME EXIT");
                     }
+                    break;
+
+                case "GUESS - LETTER": case "GUESS - WORD":
+                    for (ServerThread player : game.getPlayers()) {
+                        if (player != st) {
+                            player.message(message);
+                            player.message(st.getAccount().getUsername());
+                            player.message(st.getGuess());
+                        }
+                    }
+                    break;
+
+                case "LETTER - CORRECT GUESS": case "LETTER - INCORRECT GUESS":
+                    nextPlayer(game, message, st.getGuess());
                     break;
 
                 case "WORD - CORRECT GUESS":
