@@ -18,6 +18,7 @@ public class HangmanServer {
 
     public HangmanServer(int port, Connection conn) {
         try(ServerSocket ss = new ServerSocket(port)) {
+            serverThreadVector = new Vector<>();
             games = new ConcurrentHashMap<>();
             while (true) {
                 Socket s = ss.accept();

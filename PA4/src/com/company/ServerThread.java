@@ -19,7 +19,6 @@ public class ServerThread extends Thread {
     private HangmanServer server;
     private Connection conn;
     private PreparedStatement ps;
-    private ResultSet rs;
 
     private Account account = new Account();
     private HangmanGame game;
@@ -56,7 +55,7 @@ public class ServerThread extends Thread {
                             ps = conn.prepareStatement("SELECT * FROM Account WHERE username = ?");
                             ps.setString(1, account.getUsername());
 
-                            rs = ps.executeQuery();
+                            ResultSet rs = ps.executeQuery();
                             if (rs.next()) {
                                 if (account.getPassword().equals(rs.getString("password"))) {
                                     System.out.println(timestamp + " " + account.getUsername() + " - successfully logged in.");

@@ -262,27 +262,27 @@ public class HangmanClient extends Thread {
         return "\nYou have " + num + " incorrect guesses remaining.\n\t1) Guess a letter.\n\t2) Guess the word.\n";
     }
 
-    public static int getIntInput(String display, String prompt, String error, int min, int max) {
+    public static int getIntInput(String prompt1, String prompt2, String errorString, int minVal, int maxVal) {
         int num;
         boolean goneThrough;
         do {
-            if (display != null) {
-                System.out.println(display);
+            if (prompt1 != null) {
+                System.out.println(prompt1);
             }
-            System.out.print(prompt);
+            System.out.print(prompt2);
             while (!scanner.hasNextInt()) {
                 System.out.println("\nThat is not a valid option.");
-                if (display != null) {
-                    System.out.println(display);
+                if (prompt1 != null) {
+                    System.out.println(prompt1);
                 }
-                System.out.print(prompt);
+                System.out.print(prompt2);
                 scanner.nextLine();
             }
             goneThrough = true;
             num = scanner.nextInt();
             scanner.nextLine();
-            if (num < min || num > max) {
-                System.out.println("\n" + error);
+            if (num < minVal || num > maxVal) {
+                System.out.println("\n" + errorString);
                 goneThrough=false;
             }
         } while (!goneThrough);
