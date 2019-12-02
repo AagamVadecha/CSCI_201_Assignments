@@ -121,7 +121,7 @@ public class ServerThread extends Thread {
                             if (game.getPlayers().size() == game.getNumPlayers()) {
                                 waitForUsers(timestamp);
                             } else {
-                                server.notify("Users still joining", game.getName(), this);
+                                server.alert("Users still joining", game.getName(), this);
                             }
                             break;
 
@@ -134,12 +134,12 @@ public class ServerThread extends Thread {
                                     System.out.println(timestamp + " " + account.getUsername() + " - successfully joined " + name + ".");
                                     this.game = server.getGame(name);
                                     account.setAccountID(game.getPlayers().size() - 1);
-                                    server.notify("Successfully joined", game.getName(), this);
+                                    server.alert("Successfully joined", game.getName(), this);
 
                                     if (game.getPlayers().size() == game.getNumPlayers()) {
                                         waitForUsers(timestamp);
                                     } else {
-                                        server.notify("Users still joining", game.getName(), this);
+                                        server.alert("Users still joining", game.getName(), this);
                                     }
                                 } else {
                                     System.out.println(timestamp + " " + account.getUsername() + " - " + name + " exists, but " +
@@ -155,7 +155,7 @@ public class ServerThread extends Thread {
                         case "Letter guess":
                             this.guess = br.readLine();
                             System.out.println(timestamp + " " + account.getUsername() + " - guessed letter '" + guess + "'.");
-                            server.notify(line, game.getName(), this);
+                            server.alert(line, game.getName(), this);
 
                             int index = game.getSecretWord().indexOf(guess.toLowerCase());
                             if (index != -1) {
@@ -177,10 +177,10 @@ public class ServerThread extends Thread {
                                     String opponents = updateAccounts();
                                     System.out.println(timestamp + " " + account.getUsername() + " - guessed the last letter and wins the game. " +
                                             opponents + "have lost the game.");
-                                    server.notify("Guessed last letter of word", game.getName(), this);
+                                    server.alert("Guessed last letter of word", game.getName(), this);
                                     server.removeGame(game.getName());
                                 } else {
-                                    server.notify("Correct letter guess", game.getName(), this);
+                                    server.alert("Correct letter guess", game.getName(), this);
                                 }
                             } else {
                                 game.lowerGuesses();
@@ -190,10 +190,10 @@ public class ServerThread extends Thread {
                                 if (game.getNumGuesses() == 0) {
                                     System.out.println(timestamp + " " + account.getUsername() + " - no guesses remaining. All players have lost the game.");
                                     updateAccount();
-                                    server.notify("No guesses left", game.getName(), this);
+                                    server.alert("No guesses left", game.getName(), this);
                                     server.removeGame(game.getName());
                                 } else {
-                                    server.notify("Incorrect Letter Guess", game.getName(), this);
+                                    server.alert("Incorrect Letter Guess", game.getName(), this);
                                 }
                             }
                             break;
@@ -201,25 +201,25 @@ public class ServerThread extends Thread {
                         case "Word guess":
                             this.guess = br.readLine();
                             System.out.println(timestamp + " " + account.getUsername() + " - guessed word '" + guess + "'.");
-                            server.notify(line, game.getName(), this);
+                            server.alert(line, game.getName(), this);
 
                             if (guess.toLowerCase().equals(game.getSecretWord().toLowerCase())) {
                                 String temp = updateAccounts();
                                 System.out.println(timestamp + " " + account.getUsername() + " - '" + guess + "' is correct. " +
                                         account.getUsername() + " wins the game. " + temp + "have lost the game.");
-                                server.notify("Correct Word Guess", game.getName(), this);
+                                server.alert("Correct Word Guess", game.getName(), this);
                                 server.removeGame(game.getName());
                             } else {
                                 System.out.println(timestamp + " " + account.getUsername() + " - '" + guess + "' is incorrect. " +
                                         account.getUsername() + " has lost and is no longer in the game.");
                                 game.lowerGuesses();
                                 account.lose();
-                                server.notify("Incorrect Word Guess", game.getName(), this);
+                                server.alert("Incorrect Word Guess", game.getName(), this);
 
                                 if (game.getNumGuesses() == 0) {
                                     System.out.println(timestamp + " " + account.getUsername() + " - no guesses remaining. All players have lost the game.");
                                     updateAccount();
-                                    server.notify("No guesses left", game.getName(), this);
+                                    server.alert("No guesses left", game.getName(), this);
                                     server.removeGame(game.getName());
                                 } else {
                                     boolean gameOver = true;
@@ -230,10 +230,10 @@ public class ServerThread extends Thread {
                                     if (gameOver) {
                                         System.out.println(timestamp + " " + account.getUsername() + " - no players remaining. All players have lost the game.");
                                         updateAccount();
-                                        server.notify("No accounts left", game.getName(), this);
+                                        server.alert("No accounts left", game.getName(), this);
                                         server.removeGame(game.getName());
                                     } else {
-                                        server.notify("Continue game", game.getName(), this);
+                                        server.alert("Continue game", game.getName(), this);
                                     }
                                 }
                             }
@@ -261,7 +261,7 @@ public class ServerThread extends Thread {
         StringBuilder opponents = new StringBuilder();
         for(int x=0; x < game.getPlayers().size(); x++){
             if (game.getPlayers().get(x) == this) {
-                account.setWins(account.getWins() + 1);
+                account.incrementWin();
                 ps = conn.prepareStatement("UPDATE Account SET numWins = ? WHERE username = ?");
                 ps.setInt(1, account.getWins());
                 ps.setString(2, account.getUsername());
@@ -284,7 +284,7 @@ public class ServerThread extends Thread {
                 "Secret word is " + game.getSecretWord() + ".");
         game.setGuessedWord(game.getSecretWord().replaceAll("[A-Za-z]", "_ "));
 
-        server.notify("No users joining", game.getName(), this);
+        server.alert("No users joining", game.getName(), this);
     }
 
     public String getGuess() {

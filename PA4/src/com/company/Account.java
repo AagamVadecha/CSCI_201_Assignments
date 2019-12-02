@@ -55,6 +55,9 @@ public class Account {
     public void incrementLoss(){
         losses+=1;
     }
+    public void incrementWin() {
+        wins +=1;
+    }
 
     public String getWinLoss(){
         return getUsername() + "'s Record\n--------\nWins - " + wins + "\nLosses - " + losses;

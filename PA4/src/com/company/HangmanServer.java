@@ -18,7 +18,6 @@ public class HangmanServer {
 
     public HangmanServer(int port, Connection conn) {
         try(ServerSocket ss = new ServerSocket(port)) {
-            serverThreadVector = new Vector<>();
             games = new ConcurrentHashMap<>();
             while (true) {
                 Socket s = ss.accept();
@@ -80,7 +79,7 @@ public class HangmanServer {
         game.nextTurn();
     }
 
-    public void notify(String message, String name, ServerThread st) {
+    public void alert(String message, String name, ServerThread st) {
         if (message != null) {
             Account account = st.getAccount();
             HangmanGame game = games.get(name.toLowerCase());
