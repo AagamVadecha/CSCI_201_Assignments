@@ -200,7 +200,6 @@ public class HangmanServer {
         String filename;
         configFileProperties properties = null;
 
-
         boolean validFile = false;
         do {
             System.out.print("What is the name of the configuration file? ");
