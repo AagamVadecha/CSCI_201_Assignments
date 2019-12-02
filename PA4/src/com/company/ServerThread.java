@@ -251,7 +251,6 @@ public class ServerThread extends Thread {
             for(int x=0; x < game.getPlayers().size(); x++){
                 Account account = game.getPlayers().get(x).getAccount();
                 account.incrementLoss();
-
                 ps = conn.prepareStatement("UPDATE Account SET numLosses = ? WHERE username = ?");
                 ps.setInt(1, account.getLosses());
                 ps.setString(2, account.getUsername());
@@ -263,7 +262,6 @@ public class ServerThread extends Thread {
         for(int x=0; x < game.getPlayers().size(); x++){
             if (game.getPlayers().get(x) == this) {
                 account.setWins(account.getWins() + 1);
-
                 ps = conn.prepareStatement("UPDATE Account SET numWins = ? WHERE username = ?");
                 ps.setInt(1, account.getWins());
                 ps.setString(2, account.getUsername());
@@ -271,7 +269,6 @@ public class ServerThread extends Thread {
             } else {
                 Account account = game.getPlayers().get(x).getAccount();
                 account.incrementLoss();
-
                 ps = conn.prepareStatement("UPDATE Account SET numLosses = ? WHERE username = ?");
                 ps.setInt(1, account.getLosses());
                 ps.setString(2, account.getUsername());
