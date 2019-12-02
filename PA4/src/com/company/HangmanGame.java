@@ -82,7 +82,7 @@ public class HangmanGame {
     }
 
     public void nextTurn() {
-        this.turn = ((this.turn+1)% players.size());
+        this.turn = ((this.turn+1)%players.size());
     }
 
     public void replace(String letter, int index) {

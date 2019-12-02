@@ -82,8 +82,7 @@ public class HangmanClient extends Thread {
                                 getGameOption();
                                 break;
 
-                            case "JOIN SUCCESSFUL":
-                            case "USER JOINED":
+                            case "JOIN SUCCESSFUL": case "USER JOINED":
                                 System.out.println("\n" + br.readLine() + "\n");
                                 for (int i = 0; i < 4; i++) {
                                     System.out.println(br.readLine());
@@ -289,26 +288,6 @@ public class HangmanClient extends Thread {
         } while (!goneThrough);
         return num;
     }
-//
-//    public static String getCharInput(String prompt, String error, String word) {
-//        String str;
-//        boolean goneThrough;
-//        do {
-//            System.out.print(prompt);
-//            while (!scanner.hasNext()) {
-//                System.out.println("\n" + error);
-//                System.out.print(prompt);
-//                scanner.nextLine();
-//            }
-//            goneThrough = true;
-//            str = scanner.nextLine().trim();
-//            if (str.length() != 1 || word.toLowerCase().contains(str.toLowerCase()) ||!(Character.isLetter(str.charAt(0)))) {
-//                System.out.println("\n" + error);
-//                goneThrough = false;
-//            }
-//        } while (!goneThrough);
-//        return str;
-//    }
 
     public static boolean containsValue(String string, String name) {
         if (string == null || string.equals("")) {

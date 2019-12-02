@@ -153,7 +153,6 @@ public class ServerThread extends Thread {
 
 
                         case "GUESS - LETTER":
-
                             this.guess = br.readLine();
                             System.out.println(timestamp + " " + account.getUsername() + " - guessed letter '" + guess + "'.");
                             server.notify(line, game.getName(), this);
@@ -166,7 +165,8 @@ public class ServerThread extends Thread {
                                     index = game.getSecretWord().indexOf(guess, index + 1);
                                     if (index != -1) {
                                         game.replace(guess, index);
-                                        positions.append(", ").append(index);
+                                        positions.append(", ");
+                                        positions.append(index);
                                     }
                                 }
 
@@ -223,12 +223,9 @@ public class ServerThread extends Thread {
                                     server.removeGame(game.getName());
                                 } else {
                                     boolean gameOver = true;
-                                    for (ServerThread player : game.getPlayers()) {
-                                        if (!player.getAccount().hasLost()) {
+                                    for(int x=0; x < game.getPlayers().size(); x++)
+                                        if(game.getPlayers().get(x).getAccount().hasLost())
                                             gameOver = false;
-                                        }
-                                    }
-
                                     if (gameOver) {
                                         System.out.println(timestamp + " " + account.getUsername() + " - no players remaining. All players have lost the game.");
                                         updateAccount();
@@ -250,20 +247,20 @@ public class ServerThread extends Thread {
     }
 
     private void updateAccount() throws SQLException {
-        for (ServerThread player : game.getPlayers()) {
-            Account account = player.getAccount();
-            account.setLosses(account.getLosses() + 1);
+            for(int x=0; x < game.getPlayers().size(); x++){
+                Account account = game.getPlayers().get(x).getAccount();
+                account.incrementLoss();
 
-            ps = conn.prepareStatement("UPDATE Account SET numLosses = ? WHERE username = ?");
-            ps.setInt(1, account.getLosses());
-            ps.setString(2, account.getUsername());
-            ps.executeUpdate();
-        }
+                ps = conn.prepareStatement("UPDATE Account SET numLosses = ? WHERE username = ?");
+                ps.setInt(1, account.getLosses());
+                ps.setString(2, account.getUsername());
+                ps.executeUpdate();
+            }
     }
     private String updateAccounts() throws SQLException {
         StringBuilder opponents = new StringBuilder();
-        for (ServerThread player : game.getPlayers()) {
-            if (player == this) {
+        for(int x=0; x < game.getPlayers().size(); x++){
+            if (game.getPlayers().get(x) == this) {
                 account.setWins(account.getWins() + 1);
 
                 ps = conn.prepareStatement("UPDATE Account SET numWins = ? WHERE username = ?");
@@ -271,15 +268,15 @@ public class ServerThread extends Thread {
                 ps.setString(2, account.getUsername());
                 ps.executeUpdate();
             } else {
-                Account opponent = player.getAccount();
-                opponent.setLosses(opponent.getLosses() + 1);
+                Account account = game.getPlayers().get(x).getAccount();
+                account.incrementLoss();
 
                 ps = conn.prepareStatement("UPDATE Account SET numLosses = ? WHERE username = ?");
-                ps.setInt(1, opponent.getLosses());
-                ps.setString(2, opponent.getUsername());
+                ps.setInt(1, account.getLosses());
+                ps.setString(2, account.getUsername());
                 ps.executeUpdate();
 
-                opponents.append(opponent.getUsername()).append(" ");
+                opponents.append(account.getUsername()).append(" ");
             }
         }
         return opponents.toString();
