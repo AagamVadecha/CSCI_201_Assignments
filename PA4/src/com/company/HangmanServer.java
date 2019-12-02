@@ -69,10 +69,10 @@ public class HangmanServer {
                 game.nextTurn();
             }
             if (playerID == game.getTurn()) {
-                game.getPlayers().get(x).message("PLAYER TURN");
+                game.getPlayers().get(x).message("Your turn");
                 game.getPlayers().get(x).message(game.getGuesses());
             } else {
-                game.getPlayers().get(x).message("WAITING FOR OPPONENT");
+                game.getPlayers().get(x).message("Waiting for another user");
                 game.getPlayers().get(x).message(game.getGuesses());
                 game.getPlayers().get(x).message(game.getPlayers().get(game.getTurn()).getAccount().getUsername());
             }
@@ -86,49 +86,49 @@ public class HangmanServer {
             HangmanGame game = games.get(name.toLowerCase());
             switch(message) {
 
-                case "ALL USERS HAVE JOINED": case "CONTINUE GAME":
+                case "No users joining": case "Continue game":
                     nextPlayer(game, message, null);
                     break;
 
-                case "JOIN SUCCESSFUL":
+                case "Successfully joined":
                     for(int x=0; x < game.getPlayers().size(); x++) {
                         if (game.getPlayers().get(x) != st) {
                             st.message(message);
                             st.message("User " + game.getPlayers().get(x).getAccount().getUsername() + " is in the game.");
                             st.message(game.getPlayers().get(x).getAccount().getWinLoss());
 
-                            game.getPlayers().get(x).message("USER JOINED");
+                            game.getPlayers().get(x).message("Another person joined");
                             game.getPlayers().get(x).message("User " + account.getUsername() + " is in the game.");
                             game.getPlayers().get(x).message(account.getWinLoss());
                         }
                     }
                     break;
 
-                case "WAITING FOR USER(S) TO JOIN":
+                case "Users still joining":
                     for(int x=0; x < game.getPlayers().size(); x++) {
                         game.getPlayers().get(x).message(message);
                         game.getPlayers().get(x).message(game.getNumPlayers() - game.getPlayers().size());
                     }
                     break;
 
-                case "LAST LETTER GUESSED":
+                case "Guessed last letter of word":
                     for(int x=0; x < game.getPlayers().size(); x++) {
                         if (game.getPlayers().get(x) != st) {
-                            game.getPlayers().get(x).message("OPPONENT WIN - LETTER");
+                            game.getPlayers().get(x).message("Opponent won through letter");
                             game.getPlayers().get(x).message(account.getUsername());
                         } else {
                             game.getPlayers().get(x).message(message);
                         }
 
                         for (ServerThread std : game.getPlayers()) {
-                            game.getPlayers().get(x).message("PLAYER RECORD");
+                            game.getPlayers().get(x).message("Get record");
                             game.getPlayers().get(x).message(std.getAccount().getWinLoss());
                         }
-                        game.getPlayers().get(x).message("GAME EXIT");
+                        game.getPlayers().get(x).message("Finish Game");
                     }
                     break;
 
-                case "GUESS - LETTER": case "GUESS - WORD":
+                case "Letter guess": case "Word guess":
                     for(int x=0; x < game.getPlayers().size(); x++) {
                         if (game.getPlayers().get(x) != st) {
                             game.getPlayers().get(x).message(message);
@@ -138,11 +138,11 @@ public class HangmanServer {
                     }
                     break;
 
-                case "LETTER - CORRECT GUESS": case "LETTER - INCORRECT GUESS":
+                case "Correct letter guess": case "Incorrect Letter Guess":
                     nextPlayer(game, message, st.getGuess());
                     break;
 
-                case "WORD - CORRECT GUESS":
+                case "Correct Word Guess":
                     for(int x=0; x < game.getPlayers().size(); x++) {
                         if (game.getPlayers().get(x) != st) {
                             game.getPlayers().get(x).message("OPPONENT WIN - WORD");
@@ -152,17 +152,17 @@ public class HangmanServer {
                         }
 
                         for (ServerThread s : game.getPlayers()) {
-                            game.getPlayers().get(x).message("PLAYER RECORD");
+                            game.getPlayers().get(x).message("Get record");
                             game.getPlayers().get(x).message(s.getAccount().getWinLoss());
                         }
-                        game.getPlayers().get(x).message("GAME EXIT");
+                        game.getPlayers().get(x).message("Finish Game");
                     }
                     break;
 
-                case "WORD - INCORRECT GUESS":
+                case "Incorrect Word Guess":
                     for(int x=0; x < game.getPlayers().size(); x++) {
                         if (game.getPlayers().get(x) != st) {
-                            game.getPlayers().get(x).message("OPPONENT LOSE");
+                            game.getPlayers().get(x).message("Opponent incorrectly guessed word");
                             game.getPlayers().get(x).message(account.getUsername());
                         } else {
                             game.getPlayers().get(x).message(message);
@@ -170,16 +170,16 @@ public class HangmanServer {
                     }
                     break;
 
-                case "NO GUESSES REMAINING": case "NO PLAYERS REMAINING":
+                case "No guesses left": case "No accounts left":
                     for(int x=0; x < game.getPlayers().size(); x++) {
                         game.getPlayers().get(x).message(message);
                         game.getPlayers().get(x).message(game.getSecretWord());
 
                         for (ServerThread s : game.getPlayers()) {
-                            game.getPlayers().get(x).message("PLAYER RECORD");
+                            game.getPlayers().get(x).message("Get record");
                             game.getPlayers().get(x).message(s.getAccount().getWinLoss());
                         }
-                        game.getPlayers().get(x).message("GAME EXIT");
+                        game.getPlayers().get(x).message("Finish Game");
                     }
                     break;
             }

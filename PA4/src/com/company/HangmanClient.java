@@ -39,7 +39,7 @@ public class HangmanClient extends Thread {
 
                     if (line != null) {
                         switch (line) {
-                            case "SUCCESSFULLY LOGGED IN":
+                            case "logged in":
                                 System.out.println("\nGreat! You are now logged in as " + this.username + ".\n");
                                 for (int i = 0; i < 4; i++) {
                                     System.out.println(br.readLine());
@@ -73,7 +73,7 @@ public class HangmanClient extends Thread {
 
                             case "START SUCCESSFUL":
                                 int numPlayers = getIntInput(null, "\nHow many users will be playing (1-4)? ", "A game can only have between 1-4 players.", 1, 4);
-                                pw.println("NUMBER OF PLAYERS");
+                                pw.println("Count Players");
                                 pw.println(numPlayers);
                                 break;
 
@@ -82,82 +82,82 @@ public class HangmanClient extends Thread {
                                 getGameOption();
                                 break;
 
-                            case "JOIN SUCCESSFUL": case "USER JOINED":
+                            case "Successfully joined": case "Another person joined":
                                 System.out.println("\n" + br.readLine() + "\n");
                                 for (int i = 0; i < 4; i++) {
                                     System.out.println(br.readLine());
                                 }
                                 break;
 
-                            case "JOIN UNSUCCESSFUL - GAME DOES NOT EXIST":
+                            case "Game doesn't exist":
                                 System.out.println("\nThere is no game with the name " + gameName + ".");
                                 getGameOption();
                                 break;
 
-                            case "JOIN UNSUCCESSFUL - GAME IS FULL":
+                            case "Game's full":
                                 System.out.println("\nThe game " + gameName + " does not have space for another user to join.");
                                 getGameOption();
                                 break;
 
-                            case "ALL USERS HAVE JOINED":
+                            case "No users joining":
                                 System.out.println("\nAll users have joined.");
                                 System.out.println("\nDetermining secret word...");
                                 this.displayedWord = br.readLine();
                                 System.out.println("\nSecret Word " + displayedWord);
                                 break;
 
-                            case "WAITING FOR USER(S) TO JOIN":
+                            case "Users still joining":
                                 System.out.println("\nWaiting for " + (br.read() - '0') + " other user(s) to join...");
                                 break;
 
-                            case "PLAYER TURN":
+                            case "Your turn":
                                 getGuessOption(br.read() - '0');
                                 break;
 
-                            case "WAITING FOR OPPONENT":
+                            case "Waiting for another user":
                                 System.out.println("\nYou have " + (br.read() - '0') + " incorrect guesses remaining.");
                                 br.readLine();
                                 System.out.println("Waiting for " + br.readLine() + " to do something...");
                                 break;
 
-                            case "GUESS - LETTER":
+                            case "Letter guess":
                                 System.out.println("\n" + br.readLine() + " has guessed the letter '" + br.readLine() + "'.");
                                 break;
 
-                            case "GUESS - WORD":
+                            case "Word guess":
                                 System.out.println("\n" + br.readLine() + " has guessed the word '" + br.readLine() + "'.");
                                 break;
 
-                            case "LETTER - CORRECT GUESS":
+                            case "Correct letter guess":
                                 System.out.println("\nThe letter '" + br.readLine() + "' is in the secret word.");
                                 this.displayedWord = br.readLine();
                                 System.out.println("\nSecret Word: " + displayedWord);
                                 break;
 
-                            case "LETTER - INCORRECT GUESS":
+                            case "Incorrect Letter Guess":
                                 System.out.println("\nThe letter '" + br.readLine() + "' is not in the secret word.");
                                 this.displayedWord = br.readLine();
                                 System.out.println("\nSecret Word: " + displayedWord);
                                 break;
 
-                            case "LAST LETTER GUESSED":
+                            case "Guessed last letter of word":
                                 System.out.println("\nYou guessed the last letter! You win!");
                                 break;
 
-                            case "WORD - CORRECT GUESS":
+                            case "Correct Word Guess":
                                 System.out.println("\nThat is correct! You win!");
                                 break;
 
-                            case "WORD - INCORRECT GUESS":
+                            case "Incorrect Word Guess":
                                 System.out.println("\nThat is incorrect! You are out of the game!");
                                 break;
 
-                            case "NO GUESSES REMAINING":
+                            case "No guesses left":
                                 System.out.println("\nNo guesses remaining. You lose!");
                                 System.out.println("The word was '" + br.readLine() + "'.");
                                 break;
 
-                            case "OPPONENT WIN - LETTER":
+                            case "Opponent won through letter":
                                 System.out.println("\n" + br.readLine() + " guessed the last letter. You lose!");
                                 break;
 
@@ -165,20 +165,20 @@ public class HangmanClient extends Thread {
                                 System.out.println("\n" + br.readLine() + " guessed the word correctly. You lose!");
                                 break;
 
-                            case "OPPONENT LOSE":
+                            case "Opponent incorrectly guessed word":
                                 System.out.println("\n" + br.readLine() + " guessed the word incorrectly and is out of the game.");
                                 break;
 
-                            case "NO PLAYERS REMAINING":
+                            case "No accounts left":
                                 System.out.println("\nNo players remaining. You lose!");
                                 System.out.println("The word was '" + br.readLine() + "'.");
                                 break;
 
-                            case "CONTINUE GAME":
+                            case "Continue game":
                                 this.displayedWord = br.readLine();
                                 System.out.println("\nSecret Word " + displayedWord);
                                 break;
-                            case "PLAYER RECORD":
+                            case "Get record":
                                 for (int i = 0; i < 4; i++) {
                                     System.out.print("\n" + br.readLine());
                                     if (i == 3)
@@ -186,7 +186,7 @@ public class HangmanClient extends Thread {
                                 }
                                 break;
 
-                            case "GAME EXIT":
+                            case "Finish Game":
                                 System.out.println("\nThank you for playing Hangman!");
                                 break breakLabel;
                         }
@@ -199,7 +199,7 @@ public class HangmanClient extends Thread {
     }
 
     public void getUserLogin() {
-        pw.println("LOGIN");
+        pw.println("login attempt");
 
         System.out.print("\nUsername: ");
         this.username = scanner.nextLine();
@@ -216,9 +216,9 @@ public class HangmanClient extends Thread {
         this.gameName = scanner.nextLine();
 
         if (input == 1) {
-            pw.println("START GAME");
+            pw.println("New Game");
         } else {
-            pw.println("JOIN GAME");
+            pw.println("Try To Join Game");
         }
         pw.println(gameName);
     }
@@ -243,12 +243,12 @@ public class HangmanClient extends Thread {
                     goneThrough = false;
                 }
             } while (!goneThrough);
-            pw.println("GUESS - LETTER");
+            pw.println("Letter guess");
             pw.println(guess);
         } else {
             System.out.print("\nWhat is the secret word? ");
             String guess = scanner.nextLine().trim();
-            pw.println("GUESS - WORD");
+            pw.println("Word guess");
             pw.println(guess);
         }
     }
