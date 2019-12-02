@@ -12,6 +12,7 @@ public class HangmanGame {
     private int guesses;
     private int turn;
 
+    //initialize with 7 guesses and 0 for the array index
     public HangmanGame(String name){
         this.name = name;
         players = new Vector<>();

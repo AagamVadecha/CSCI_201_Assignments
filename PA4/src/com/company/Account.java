@@ -52,7 +52,7 @@ public class Account {
         this.losses = losses;
     }
 
-    public void incrementLoss(){
+    public void incrementLoss() {
         losses+=1;
     }
     public void incrementWin() {
@@ -60,7 +60,7 @@ public class Account {
     }
 
     public String getWinLoss(){
-        return getUsername() + "'s Record\n--------\nWins - " + wins + "\nLosses - " + losses;
+        return username + "'s Record\n--------\nWins - " + wins + "\nLosses - " + losses;
     }
 
     public boolean hasLost(){
