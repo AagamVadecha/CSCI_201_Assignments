@@ -223,9 +223,10 @@ public class ServerThread extends Thread {
                                     server.removeGame(game.getName());
                                 } else {
                                     boolean gameOver = true;
-                                    for(int x=0; x < game.getPlayers().size(); x++)
-                                        if(game.getPlayers().get(x).getAccount().hasLost())
+                                    for(int x=0; x < game.getPlayers().size(); x++) {
+                                        if (!game.getPlayers().get(x).getAccount().hasLost())
                                             gameOver = false;
+                                    }
                                     if (gameOver) {
                                         System.out.println(timestamp + " " + account.getUsername() + " - no players remaining. All players have lost the game.");
                                         updateAccount();
