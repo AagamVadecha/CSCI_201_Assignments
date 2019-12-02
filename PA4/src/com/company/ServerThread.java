@@ -77,7 +77,7 @@ public class ServerThread extends Thread {
                             }
                             break;
 
-                        case "NEW ACCOUNT":
+                        case "new user":
                             account.setUsername(br.readLine());
                             account.setPassword(br.readLine());
                             System.out.println(timestamp + " " + account.getUsername() + " - created an account with password " + account.getPassword() + ".");
@@ -103,11 +103,11 @@ public class ServerThread extends Thread {
 
                             if (server.containsGame(gameName)) {
                                 System.out.println(timestamp + " " + account.getUsername() + " - " + gameName + " already exists, so unable to start " + gameName + ".");
-                                pw.println("START UNSUCCESSFUL - GAME ALREADY EXISTS");
+                                pw.println("can't use this name");
                             } else {
                                 this.game = new HangmanGame(gameName);
                                 account.setAccountID(0);
-                                pw.println("START SUCCESSFUL");
+                                pw.println("started");
                             }
                             break;
 

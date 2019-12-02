@@ -145,7 +145,7 @@ public class HangmanServer {
                 case "Correct Word Guess":
                     for(int x=0; x < game.getPlayers().size(); x++) {
                         if (game.getPlayers().get(x) != st) {
-                            game.getPlayers().get(x).message("OPPONENT WIN - WORD");
+                            game.getPlayers().get(x).message("Opponent won through word");
                             game.getPlayers().get(x).message(account.getUsername());
                         } else {
                             game.getPlayers().get(x).message(message);

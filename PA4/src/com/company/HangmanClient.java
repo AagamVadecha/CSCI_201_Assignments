@@ -47,12 +47,12 @@ public class HangmanClient extends Thread {
                                 getGameOption();
                                 break;
 
-                            case "INCORRECT PASSWORD":
+                            case "incorrect password":
                                 System.out.println("The password you entered is incorrect. Please try again.");
                                 getUserLogin();
                                 break;
 
-                            case "INVALID USER":
+                            case "invalid user":
                                 System.out.println("\nNo account exists with those credentials.");
                                 System.out.print("Would you like to create a new account? ");
                                 String input = scanner.nextLine();
@@ -60,7 +60,7 @@ public class HangmanClient extends Thread {
                                     System.out.print("Would you like to use the username and password above? ");
                                     input = scanner.nextLine();
                                     if (input.equalsIgnoreCase("yes") || input.equalsIgnoreCase("y")) {
-                                        pw.println("NEW ACCOUNT");
+                                        pw.println("new user");
                                         pw.println(this.username);
                                         pw.println(this.password);
                                     } else {
@@ -71,13 +71,13 @@ public class HangmanClient extends Thread {
                                 }
                                 break;
 
-                            case "START SUCCESSFUL":
+                            case "started":
                                 int numPlayers = getIntInput(null, "\nHow many users will be playing (1-4)? ", "A game can only have between 1-4 players.", 1, 4);
                                 pw.println("Count Players");
                                 pw.println(numPlayers);
                                 break;
 
-                            case "START UNSUCCESSFUL - GAME ALREADY EXISTS":
+                            case "can't use this name":
                                 System.out.println("\n" + gameName + " already exists.");
                                 getGameOption();
                                 break;
@@ -161,7 +161,7 @@ public class HangmanClient extends Thread {
                                 System.out.println("\n" + br.readLine() + " guessed the last letter. You lose!");
                                 break;
 
-                            case "OPPONENT WIN - WORD":
+                            case "Opponent won through word":
                                 System.out.println("\n" + br.readLine() + " guessed the word correctly. You lose!");
                                 break;
 
