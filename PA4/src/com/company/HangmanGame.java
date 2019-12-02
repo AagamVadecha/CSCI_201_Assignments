@@ -10,15 +10,6 @@ public class HangmanGame {
     private String secretWord;
     private String guessedWord;
     private int guesses;
-
-    public Vector<ServerThread> getValidPlayers() {
-        return validPlayers;
-    }
-
-    public void setValidPlayers(Vector<ServerThread> validPlayers) {
-        this.validPlayers = validPlayers;
-    }
-
     private int turn;
 
     public HangmanGame(String name){
@@ -56,7 +47,6 @@ public class HangmanGame {
             return false;
         }
         players.add(server);
-        validPlayers.add(server);
         return true;
     }
 

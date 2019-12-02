@@ -214,7 +214,6 @@ public class ServerThread extends Thread {
                                         account.getUsername() + " has lost and is no longer in the game.");
                                 game.lowerGuesses();
                                 account.lose();
-                                game.getValidPlayers().remove(account);
                                 server.notify("WORD - INCORRECT GUESS", game.getName(), this);
 
                                 if (game.getNumGuesses() == 0) {

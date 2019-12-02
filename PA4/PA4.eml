@@ -3,8 +3,4 @@
 	<output-test url="file://$MODULE_DIR$/out/test/PA4"/>
 	<exclude-output/>
 	<contentEntry url="file://$MODULE_DIR$"/>
-	<levels>
-		<level name="mysql-socket-factory-1.0.15-jar-with-dependencies" value="project"/>
-		<level name="mysql-connector-java-5.1.46" value="project"/>
-	</levels>
 </component>
