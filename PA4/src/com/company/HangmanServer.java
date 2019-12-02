@@ -240,7 +240,7 @@ public class HangmanServer {
         } catch (SQLException exception) {
             System.out.println("Unable to connect to database " + properties.getConnection() + " with username " + properties.getDBUsername() + " and password " + properties.getDBPassword() + ".");
         } catch (Exception exception) {
-            System.out.println("Exception occurred");
+            System.out.println("Exception occurred " + exception.getMessage());
         } finally {
             try {
                 if (conn != null) {
