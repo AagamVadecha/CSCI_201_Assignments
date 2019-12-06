@@ -30,13 +30,10 @@ public class HangmanServer {
         }
     }
 
-    //select word
     public void gameStart(String name, HangmanGame game){
         game.setSecretWord(words.get((int) (Math.random()*(words.size()))));
         games.put(name.toLowerCase(), game);
     }
-
-
 
     public void removeGame(String name) {
         games.remove(name.toLowerCase());
@@ -45,8 +42,6 @@ public class HangmanServer {
         return games.get(name.toLowerCase());
     }
 
-
-    //check if games is null, if it's empty, and if neither if it contains the name of the game
     public boolean containsGame(String name){
         return (!(games==null) && !games.isEmpty() && games.containsKey(name.toLowerCase()));
     }
@@ -62,7 +57,6 @@ public class HangmanServer {
         }
     }
 
-    //goes to the next player, skipping if a player has already lost, notifies players if their turn or another person's turn
     public void nextPlayer(HangmanGame game, String message, String guess) {
         for(int x=0; x < game.getPlayers().size(); x++) {
             int playerID = game.getPlayers().get(x).getAccount().getAccountID();
@@ -86,7 +80,6 @@ public class HangmanServer {
         game.nextTurn();
     }
 
-    //self explanatory
     public void alert(String message, String name, ServerThread st) {
         if (message != null) {
             Account account = st.getAccount();
@@ -193,7 +186,7 @@ public class HangmanServer {
         }
     }
 
-//check if the value is null/empty, if not then just ret false
+
     public static boolean containsValue(String string, String name) {
         if(string == null || string.equals("")){
             System.out.println(name + " is a required parameter in the configuration file.");
@@ -201,7 +194,7 @@ public class HangmanServer {
         }
         return true;
     }
-//read config file and connect to db
+
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         String filename;
@@ -259,7 +252,7 @@ public class HangmanServer {
         }
         scan.close();
     }
-//does all the validity checking, exiting if file is invalid
+
     static void validFile(configFileProperties properties, boolean hostname, boolean port, boolean connection, boolean dbUsername, boolean dbPassword, boolean secretWordFile) {
 
         boolean isValidFile = hostname;

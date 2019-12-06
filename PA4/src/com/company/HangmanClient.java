@@ -30,7 +30,6 @@ public class HangmanClient extends Thread {
         }
     }
 
-    //main code block
     public void run() {
         try {
             breakLabel :
@@ -198,7 +197,7 @@ public class HangmanClient extends Thread {
             e.printStackTrace();
         }
     }
-//gets logins
+
     public void getUserLogin() {
         pw.println("login attempt");
 
@@ -211,7 +210,6 @@ public class HangmanClient extends Thread {
         pw.println(this.password);
     }
 
-    //gets option for whether or not to join a game
     public void getGameOption() {
         int input = getIntInput(displayGameOptions(), "Would you like to start a game or join a game? ", "That is not a valid option.", 1, 2);
         System.out.print("\nWhat is the name of the game? ");
@@ -225,7 +223,6 @@ public class HangmanClient extends Thread {
         pw.println(gameName);
     }
 
-    //gets the option for guesses (1/2)
     public void getGuessOption(int num) {
         int input = getIntInput(displayNumGuessOptions(num), "What would you like to do? ", "That is not a valid option.", 1, 2);
 
@@ -292,7 +289,6 @@ public class HangmanClient extends Thread {
         return num;
     }
 
-    //checks individual values separately
     public static boolean containsValue(String string, String name) {
         if (string == null || string.equals("")) {
             System.out.println(name + " is a required parameter in the configuration file.");
@@ -320,7 +316,6 @@ public class HangmanClient extends Thread {
             }
         } while (!validFile);
 
-        //check if all properties are included
         HangmanServer.validFile(properties, containsValue(properties.getHostname(), "hostname"), containsValue(properties.getPort(), "port"), containsValue(properties.getConnection(), "connection"), containsValue(properties.getDBUsername(), "DBUsername"), containsValue(properties.getDBPassword(), "DBPassword"), containsValue(properties.getSecretWordFile(), "SecretWordFile"));
 
         new HangmanClient(properties.getHostname(), Integer.parseInt(properties.getPort()));

@@ -36,7 +36,6 @@ public class ServerThread extends Thread {
         }
     }
 
-    //self-explanatory cases, main code block
     @Override
     public void run() {
         try {
@@ -247,7 +246,6 @@ public class ServerThread extends Thread {
         }
     }
 
-//everyone loses
     private void updateAccount() throws SQLException {
             for(int x=0; x < game.getPlayers().size(); x++){
                 Account account = game.getPlayers().get(x).getAccount();
@@ -258,7 +256,6 @@ public class ServerThread extends Thread {
                 ps.executeUpdate();
             }
     }
-    //one person wins
     private String updateAccounts() throws SQLException {
         StringBuilder opponents = new StringBuilder();
         for(int x=0; x < game.getPlayers().size(); x++){
@@ -280,7 +277,7 @@ public class ServerThread extends Thread {
         }
         return opponents.toString();
     }
-//whether or not to wait for users, if not and select word, use regex to make it "_ _ _ "...
+
     private void waitForUsers(String timestamp) {
         System.out.println(timestamp + " " + account.getUsername() + " - " + game.getName() + " has " + game.getNumPlayers() + " player(s) so starting game. " +
                 "Secret word is " + game.getSecretWord() + ".");
