@@ -1,7 +1,7 @@
 package com.company;
 
 public class Account {
-    private String username;
+    private String name;
     private String password;
     private int wins;
     private int losses;
@@ -21,11 +21,11 @@ public class Account {
     }
 
     public String getUsername() {
-        return username;
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsername(String name) {
+        this.name = name;
     }
 
     public String getPassword() {
@@ -60,7 +60,7 @@ public class Account {
     }
 
     public String getWinLoss(){
-        return username + "'s Record\n--------\nWins - " + wins + "\nLosses - " + losses;
+        return name + "'s Record\n--------\nWins - " + wins + "\nLosses - " + losses;
     }
 
     public boolean hasLost(){
